@@ -16,7 +16,7 @@ export default function LandingPage() {
       <Timestamp />
 
       <div className="flex flex-col items-center gap-10 sm:gap-14 flex-1 justify-center w-full">
-        <div className="w-[70vw] max-w-[420px]">
+        <div className="w-[min(240px,70vw)] sm:w-[min(70vw,420px)]">
           <Logo />
         </div>
 

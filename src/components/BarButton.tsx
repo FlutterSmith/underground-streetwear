@@ -28,6 +28,7 @@ export function BarButton({ label, href, onClick, className, fullWidth }: BarBut
       initial="rest"
       whileHover="hover"
       whileFocus="hover"
+      whileTap="hover"
       animate="rest"
       className={clsx(
         "relative inline-flex items-center justify-center h-12 border border-black overflow-hidden font-mono text-sm tracking-[0.2em] uppercase select-none align-middle",

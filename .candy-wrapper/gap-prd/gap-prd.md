@@ -2,7 +2,19 @@
 
 **Date:** 2026-04-18
 **PRD:** `docs/prd/2026-04-18-streetwear-brand-site.md`
-**Branch:** `main` (last commit `c5670fb` — scaffold Next.js 15 site)
+**Branch:** `main` (last commit `455067e` — progress after turn 2 of 10)
+
+## Turn 3 Progress
+
+Closed P1/P2 code gaps:
+
+- **3.1 Logo.tsx** — now renders `<Image src={siteConfig.logoSvgPath} />`. FR-G4 config-swap-reflects-everywhere verified.
+- **3.2 Nav.tsx** — three-column grid (`grid-cols-3`), nav `justify-self-center`. FR-H1 wireframe match.
+- **4.3 Touch fallback** — `whileTap` added to `BarButton` (mirrors hover) and `ProductTile` (scale 1.05 / rotate 0). §6.2 edge case closed.
+- **3.4 Mobile logo** — landing wrapper now `w-[min(240px,70vw)] sm:w-[min(70vw,420px)]`. FR-R1 exact.
+- **3.6 Gate run** — `npm run lint` clean, `tsc --noEmit` clean, `next build` green, 9/9 static pages. Landing First Load JS **153 KB** uncompressed (≈ budget once gzipped; monitor on deploy).
+
+Still open: **4.1 Firebase App Hosting** (needs GitHub username from Ahmed), **3.3/4.5 transparent PNGs** (content task), **4.2 `images.remotePatterns`** (defensive), **4.4 Framer Motion code-split** (verify post-Lighthouse), **4.6 Context7 audit** (defensive).
 
 ---
 
