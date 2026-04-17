@@ -28,7 +28,7 @@ export default function ShopPage() {
           &mdash; catalog &mdash;
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-8 max-w-6xl mx-auto">
           {regular.map((p, i) => (
             <div key={p.id} className="flex justify-center">
               <ProductTile product={p} index={i} />

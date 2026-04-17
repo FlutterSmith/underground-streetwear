@@ -37,7 +37,7 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
           : {
               scale: 1.05,
               rotate: 0,
-              transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+              transition: { duration: 0.3, ease: "easeOut" },
             }
       }
       whileTap={
@@ -46,7 +46,7 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
           : {
               scale: 1.05,
               rotate: 0,
-              transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+              transition: { duration: 0.3, ease: "easeOut" },
             }
       }
       className="group relative flex flex-col items-center gap-3 cursor-pointer"

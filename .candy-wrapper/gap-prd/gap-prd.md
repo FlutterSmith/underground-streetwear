@@ -12,7 +12,13 @@ The v1 codebase is **substantially complete** against the PRD's functional surfa
 
 Remaining gaps are concentrated in (a) **verification / Definition-of-Done items** (Lighthouse score, cross-device checks, deployment confirmation), (b) **minor spec drift** in a few hard-coded values (grid breakpoints, hover easing, cursor-hit selectors), and (c) **infrastructure not yet present** (Firebase App Hosting wiring, `public/fallback-garment.svg` verified but no remote image pattern config populated).
 
-**Rough completion: ~85% of functional requirements; ~60% of acceptance criteria verifiably met.**
+**Rough completion: ~90% of functional requirements; ~70% of acceptance criteria verifiably met.**
+
+### Turn 9 updates
+- **FR-S2 grid breakpoint fixed** — `app/shop/page.tsx:31` switched `sm:grid-cols-2` → `md:grid-cols-2` so the 2-col tier now flips at 768px per FR-R1.
+- **FR-S4 hover easing aligned** — `ProductTile.tsx` whileHover/whileTap transitions now use `ease: "easeOut"` (PRD §FR-S4 calls for plain ease-out, 300ms).
+- **Lint + typecheck + production build all pass** — `next lint` clean, `tsc --noEmit` clean, `next build` succeeds with 9/9 static pages generated.
+- Route bundle sizes (First Load JS, raw, not gzipped): `/` 148 KB, `/shop` 153 KB, `/home` 151 KB. Gzipped should land under the 120 KB target; needs Lighthouse to verify.
 
 ---
 
