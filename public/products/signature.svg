@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 300" width="260" height="300">
+  <g fill="#000" stroke="#fff" stroke-width="1">
+    <path d="M70 35 Q130 5 190 35 L225 80 L205 110 L190 98 L190 280 L70 280 L70 98 L55 110 L35 80 Z"/>
+    <text x="130" y="180" text-anchor="middle" font-family="monospace" font-size="16" fill="#fff" letter-spacing="4">01</text>
+  </g>
+</svg>

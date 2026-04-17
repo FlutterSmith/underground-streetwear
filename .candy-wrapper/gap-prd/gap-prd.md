@@ -1,95 +1,71 @@
 # Gap Analysis — Streetwear Brand Site
 
 **PRD:** `docs/prd/2026-04-18-streetwear-brand-site.md`
-**Created:** 2026-04-18
-**Status:** Scaffolding pending
+**Last updated:** 2026-04-18 (Turn 2 of 10)
 
 ---
 
-## Current State of Codebase
+## Current State
 
-The project directory `C:\code\marketWebsite\` is effectively **empty**:
+Next.js 15 + Tailwind v4 + Framer Motion v11 scaffold is in place. All 6 routes build and pass lint + typecheck. Production build output: landing 148kB first load (slightly above PRD target of 120kB — optimization pending).
 
-- `docs/prd/2026-04-18-streetwear-brand-site.md` — the PRD (do not edit)
-- `.candy-wrapper/` — planning/notes folders only
-- **No** `package.json`, **no** `src/`, **no** Next.js scaffold, **no** git repo
-- Not yet initialized as a git repo, no GitHub remote, no Firebase project
+## What's Implemented
 
-## PRD Requirements Summary
+### Foundations
+- [x] `package.json` — Next 15.1.3, React 19, Tailwind v4, framer-motion 11
+- [x] `tsconfig.json` strict, `@/*` path alias
+- [x] `eslint.config.mjs`, `postcss.config.mjs`, `next.config.ts`
+- [x] Tailwind v4 `@theme` tokens in `globals.css`
+- [x] `next/font` — Inter + JetBrains Mono as CSS variables
+- [x] `src/config/site.config.ts` — brand, taglines, colors, socials
+- [x] `src/content/products.json` — 6 products incl. signature
+- [x] `src/lib/seededRotation.ts` — mulberry32 + FNV-1a hash
+- [x] `src/lib/products.ts` — typed loader
 
-- Next.js 15 App Router + TypeScript + Tailwind v4 + Framer Motion v11
-- 6 routes: `/`, `/home`, `/shop`, `/contact`, `/lookbook`, `/pre-order`
-- Signature left-to-right fill BarButton
-- Custom 8px cursor (hover-capable devices only)
-- Live monospace timestamp on landing
-- Deterministic rotated product grid (seeded mulberry32) on /shop
-- Parallax eye illustration on /home
-- Editable via `src/config/site.config.ts` + `src/content/products.json`
-- Deploy: Firebase App Hosting (`.hosted.app`)
-- Lighthouse Perf ≥ 90, A11y ≥ 95
-- Honors `prefers-reduced-motion` and `hover: hover`
+### Components
+- [x] `BarButton` — signature left→right scaleX fill, label color invert, reduced-motion safe
+- [x] `Timestamp` — SSR-safe (empty placeholder, ticks via useEffect)
+- [x] `Cursor` — rAF-driven, gated by `(hover: hover)`, mix-blend-difference, scales on interactive hover
+- [x] `PageTransition` — AnimatePresence fade+slide, reduced-motion fallback
+- [x] `Logo` — inline SVG (graffiti-style placeholder wordmark)
+- [x] `Nav` — monospace top nav, no hamburger, invert-able
+- [x] `SocialRow` — 5 inline SVG icons, 1.15x hover, noopener noreferrer
+- [x] `ProductTile` — rotates per seeded value, scale+rotate→0 on hover, image fallback
 
-## Gap: Everything
+### Routes
+- [x] `/` — landing: timestamp, logo, 4 bar-buttons, social row, no header/footer
+- [x] `/home` — two-col hero + parallax eye SVG (useScroll/useTransform)
+- [x] `/shop` — dark theme, grid, signature piece isolated w/ caption
+- [x] `/contact` — BarButton-based stub
+- [x] `/lookbook` — stub
+- [x] `/pre-order` — stub
 
-Literally nothing is built yet. Full implementation required.
+### Assets
+- [x] `public/logo.svg`, `public/fallback-garment.svg`, 6 placeholder product SVGs
 
----
+### Quality gates
+- [x] `npx tsc --noEmit` — clean
+- [x] `npx next lint` — clean
+- [x] `npx next build` — succeeds, all 9 pages static
 
-## Implementation Plan (aligned with PRD §7.1 build order)
+## Gaps / Still To Do
 
-### Phase 0 — Preflight (blocked on user input)
-- [ ] Confirm GitHub org/username for repo creation
-- [ ] Confirm whether to deploy to Firebase App Hosting now or build locally first
+### PRD Compliance
+- [ ] Landing first-load JS 148kB exceeds 120kB target (PRD §4.5) — consider dynamic-importing framer-motion on landing or stripping BarButton's motion dependency
+- [ ] Lighthouse audit not yet run; a11y score not verified
+- [ ] Mobile viewports (375, 768) not yet manually verified in a real browser
+- [ ] Empty `products.json` edge case: `/shop` message exists but rendering path not tested with empty array
+- [ ] `prefers-reduced-motion` respected in motion code but not manually verified end-to-end
 
-### Phase 1 — Scaffold
-- [ ] `npx create-next-app@latest . --typescript --tailwind --eslint --app --use-npm`
-- [ ] Initialize git repo, first commit
-- [ ] Push to GitHub
-- [ ] (Optional) Wire Firebase App Hosting, confirm live URL
+### Deployment (blocked on user input)
+- [ ] GitHub org/username + repo creation
+- [ ] Firebase App Hosting wiring + `.hosted.app` URL
 
-### Phase 2 — Foundations
-- [ ] Tailwind v4 design tokens (`--bg-light`, `--bg-dark`, `--ink`, `--paper`)
-- [ ] `next/font` loader: Inter + JetBrains Mono
-- [ ] `src/config/site.config.ts` (brand, tagline, colors, socials)
-- [ ] `src/content/products.json` (seed 5–8 products, 1 signature)
-- [ ] `src/lib/seededRotation.ts` (mulberry32 PRNG keyed by product id)
-
-### Phase 3 — Landing (/)
-- [ ] `Timestamp.tsx` — SSR-safe, empty placeholder → ticks on mount
-- [ ] `Logo.tsx` — inline SVG (graffiti placeholder at `/public/logo.svg`)
-- [ ] `BarButton.tsx` — signature fill animation
-- [ ] `SocialRow.tsx` — 20px icons, 1.15x hover scale
-- [ ] `app/page.tsx` — compose landing per wireframe
-
-### Phase 4 — Global concerns
-- [ ] `Cursor.tsx` — rAF-driven, gated by `(hover: hover)`
-- [ ] `PageTransition.tsx` — fade+slide via AnimatePresence
-- [ ] Root `layout.tsx` wires cursor + transitions + fonts
-
-### Phase 5 — Remaining routes
-- [ ] `/home` — two-col hero + parallax eye SVG
-- [ ] `/shop` — deterministic rotated grid + signature piece isolated
-- [ ] `/contact`, `/lookbook`, `/pre-order` — minimal BarButton-based stubs
-
-### Phase 6 — Polish
-- [ ] `prefers-reduced-motion` handling in all motion components
-- [ ] Mobile verification (375, 768) and desktop (1280, 1920)
-- [ ] Lint / typecheck clean
-- [ ] Lighthouse pass
-- [ ] Edge cases: missing image fallback, empty products.json → "DROP LOADING…"
-
----
+### Nice-to-haves deferred
+- [ ] Richer graffiti logo (current is geometric placeholder — owner can swap via `site.config.ts` + `/public/logo.svg`)
+- [ ] Real product photography (PNGs with transparent backgrounds)
 
 ## Progress Log
 
-- **2026-04-18** — Created gap analysis. Awaiting user confirmation on GitHub org + deploy-now preference before scaffolding.
-
----
-
-## Context7 Calls Needed (per global rule)
-
-Before writing code for each, verify current syntax via Context7:
-- Next.js 15 App Router + Framer Motion `AnimatePresence` integration pattern
-- `framer-motion` vs `motion/react` import path (v11+)
-- `next/font/google` self-hosted Inter + JetBrains Mono
-- Tailwind v4 `@theme` / `@import` token syntax
+- **Turn 1 (2026-04-18)** — Created gap analysis, asked user about GitHub/deploy. Blocked.
+- **Turn 2 (2026-04-18)** — User said continue. Scaffolded entire codebase locally: all 9 components, 6 routes, assets, tooling. Build + lint + typecheck clean. Awaiting GitHub info for deploy; remaining work is polish/verification.

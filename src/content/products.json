@@ -1,0 +1,46 @@
+[
+  {
+    "id": "heavy-hoodie-01",
+    "name": "HOODIE",
+    "priceEGP": 2400,
+    "image": "/products/hoodie.svg",
+    "category": "hoodie"
+  },
+  {
+    "id": "crew-tee-01",
+    "name": "TEE",
+    "priceEGP": 900,
+    "image": "/products/tee.svg",
+    "category": "tee"
+  },
+  {
+    "id": "cargo-pants-01",
+    "name": "PANTS",
+    "priceEGP": 1800,
+    "image": "/products/pants.svg",
+    "category": "pants"
+  },
+  {
+    "id": "ski-mask-01",
+    "name": "MASK",
+    "priceEGP": 500,
+    "image": "/products/mask.svg",
+    "category": "mask"
+  },
+  {
+    "id": "drop-shorts-01",
+    "name": "SHORTS",
+    "priceEGP": 1200,
+    "image": "/products/shorts.svg",
+    "category": "shorts"
+  },
+  {
+    "id": "signature-piece-01",
+    "name": "THE PIECE",
+    "priceEGP": 4200,
+    "image": "/products/signature.svg",
+    "category": "other",
+    "signature": true,
+    "caption": "limited drop \u00b7 01"
+  }
+]
