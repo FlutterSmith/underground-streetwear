@@ -14,7 +14,14 @@ Closed P1/P2 code gaps:
 - **3.4 Mobile logo** — landing wrapper now `w-[min(240px,70vw)] sm:w-[min(70vw,420px)]`. FR-R1 exact.
 - **3.6 Gate run** — `npm run lint` clean, `tsc --noEmit` clean, `next build` green, 9/9 static pages. Landing First Load JS **153 KB** uncompressed (≈ budget once gzipped; monitor on deploy).
 
-Still open: **4.1 Firebase App Hosting** (needs GitHub username from Ahmed), **3.3/4.5 transparent PNGs** (content task), **4.2 `images.remotePatterns`** (defensive), **4.4 Framer Motion code-split** (verify post-Lighthouse), **4.6 Context7 audit** (defensive).
+## Turn 4 Progress
+
+- **§6.2 Slow-network edge case** — `Logo.tsx` now reads `public/<logoSvgPath>` at module-scope on the server and inlines the SVG markup via `dangerouslySetInnerHTML`. Config-driven *and* zero-roundtrip, no blank flash. FR-G4 still honored.
+- **§7.2 Parallax mobile gating** — `/home` parallax transform now gated behind `matchMedia('(hover: hover)')` via `useEffect`; disabled on touch to avoid jank.
+- **4.2 `next.config.ts`** — verified `images.remotePatterns: []` already locked.
+- **Gate rerun** — lint/typecheck/build green. Landing First Load JS dropped 153 → **148 kB** (removed next/image runtime on landing since logo is now static SVG).
+
+Still open: **4.1 Firebase App Hosting** (blocked on GitHub username), **3.3/4.5 transparent PNGs** (content task), **4.4 Framer Motion code-split** (post-Lighthouse), **4.6 Context7 audit** (defensive), **6.1 Lighthouse run** (requires deploy).
 
 ---
 

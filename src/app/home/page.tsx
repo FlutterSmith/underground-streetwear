@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Nav } from "@/components/Nav";
 import { siteConfig } from "@/config/site.config";
 
@@ -9,7 +9,17 @@ export default function HomePage() {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 1000], [0, reduced ? 0 : -500]);
+  const [parallaxEnabled, setParallaxEnabled] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(hover: hover)");
+    const update = () => setParallaxEnabled(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+
+  const y = useTransform(scrollY, [0, 1000], [0, reduced || !parallaxEnabled ? 0 : -500]);
 
   return (
     <>
