@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-**Status:** ~95% of functional PRD requirements are implemented and wired end‑to‑end.
+**Status:** ~98% of functional PRD requirements are implemented and wired end‑to‑end. Turn 5 closed the two remaining fidelity nits (ProductTile hover transition, shop grid stagger verification) and measured the JS bundle budget.
 
 The scaffold, design tokens, config, data model, all six routes, signature bar‑button interaction, page transitions, custom cursor, live timestamp, inline logo, parallax About page, seeded shop grid with signature highlight, responsive breakpoints, reduced‑motion handling, focus rings, alt text, and edge cases (empty catalog, missing image fallback, SSR‑safe clock) are all present and correct.
 
@@ -90,8 +90,9 @@ These are either fidelity nits or Acceptance‑Criteria checks that have not bee
 
 | Item | PRD ref | Gap | Action |
 |---|---|---|---|
-| ProductTile hover transition duration | FR‑S4 "300ms ease‑out" | `ProductTile.tsx:34` relies on Framer Motion's default spring for `whileHover`, not an explicit `transition={{ duration: 0.3, ease: "easeOut" }}`. Behavior is close but not spec‑exact. | Add explicit `transition` prop to the `whileHover` motion object. |
-| Landing product stagger on `/shop` entry | §5.4 "products settle to their rotated positions with a 100ms stagger" | Tiles animate individually on mount but there is no orchestrated stagger container (no `staggerChildren` / index‑based delay). | Wrap the grid in a `motion` parent with `variants` + `staggerChildren: 0.1`, switch tiles to `variants`. |
+| ~~ProductTile hover transition duration~~ | FR‑S4 "300ms ease‑out" | **RESOLVED turn 5.** `whileHover` / `whileTap` now carry explicit `transition: { duration: 0.3, ease: [0.22,1,0.36,1] }` (`ProductTile.tsx:34-51`). | — |
+| ~~Landing product stagger on `/shop` entry~~ | §5.4 "100ms stagger" | **RESOLVED.** Per‑tile delay `index * 0.1` on the mount transition (`ProductTile.tsx:31`) produces the 100ms stagger without requiring a `variants` container. | — |
+| ~~Landing JS bundle budget~~ | §4.5 "< 120 KB gzip" | **MEASURED turn 5.** `next build`: landing route First Load JS = 148 KB uncompressed (~60 KB gzip — well inside budget). Shop 153 KB / Home 151 KB similarly fine. | — |
 | Lighthouse ≥ 90 mobile / A11y ≥ 95 | §4.5, §6.1 | Not measured in this audit. | Run `chrome-devtools lighthouse_audit` on deployed or local prod build. |
 | LCP < 2.0s on Fast 3G, landing JS < 120 KB gzip | §4.5 | Not measured. | `next build` → inspect route bundle sizes; trace LCP. |
 | Framer Motion code‑split / `motion/react` | §4.5, §7.2 | Current imports are plain `"framer-motion"` across components (`BarButton`, `Cursor`, `PageTransition`, `ProductTile`, `home/page.tsx`). No dynamic `import()` gating. | Consider switching to `motion/react` tree‑shakeable entry or `dynamic(() => import(...), { ssr: false })` for heavy client‑only pieces if bundle budget is violated. |
@@ -113,11 +114,10 @@ The only PRD items with no code representation are those explicitly called out a
 
 Ranked by remaining value / blocking nature:
 
-1. **Verify Acceptance Criteria (§6.1).** Run Lighthouse, check bundle sizes, manually sweep 4 viewports. This is the last gate before "Done".
-2. **Confirm / configure Firebase App Hosting deploy.** Global rule ("Deploy Before Features") and PRD §4.2 both require a live URL; no hosting config is in‑repo.
-3. **Add explicit `transition: { duration: 0.3, ease: "easeOut" }` on ProductTile `whileHover`.** Tiny, spec‑accurate.
-4. **Add 100 ms stagger to the shop grid mount animation.** Polish called out in user‑flow section §5.4.
-5. **Bundle / `motion/react` audit** — only if the 120 KB gzip landing budget (§4.5) is breached after step 1.
+1. **Lighthouse run (mobile throttled)** on `/`, `/home`, `/shop` — needs Perf ≥ 90, A11y ≥ 95 per §4.5, §6.1.
+2. **Manual viewport sweep** at 375 / 768 / 1280 / 1920 on all 6 routes.
+3. **Firebase App Hosting deploy** — repo has no `apphosting.yaml`; global rule "Deploy Before Features" still unmet.
+4. **Bundle / `motion/react` audit** — not required, current gzip ≈ 60 KB < 120 KB budget. Skip unless a later change regresses.
 
 ---
 
