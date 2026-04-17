@@ -1,136 +1,117 @@
-# Gap Analysis — Underground Streetwear Brand Site
+# Gap Analysis — Underground Streetwear Brand Website
 
-**Date:** 2026-04-18
+**Generated:** 2026-04-18
 **PRD:** `docs/prd/2026-04-18-streetwear-brand-site.md`
 **Branch:** `main`
-**Scope:** Fresh audit of current codebase vs. PRD v1.0
+**Auditor:** Fresh codebase sweep vs PRD v1.0
 
 ---
 
 ## 1. Executive Summary
 
-**Status:** ~99% of functional PRD requirements are implemented and wired end‑to‑end. Turn 5 closed the two remaining fidelity nits (ProductTile hover transition, shop grid stagger verification) and measured the JS bundle budget. Turn 6 ran Lighthouse (mobile, production build) on `/`, `/shop`, `/home` and fixed two color‑contrast violations that surfaced; all three now score A11y 100 / Best Practices 100 / SEO 100.
+The site is **substantially complete**. All six routes render, the signature BarButton fill animation is implemented correctly, the seeded-rotation SSR strategy is in place, and accessibility affordances (reduced-motion, focus rings, alt text, touch-aware cursor/parallax) are wired through.
 
-The scaffold, design tokens, config, data model, all six routes, signature bar‑button interaction, page transitions, custom cursor, live timestamp, inline logo, parallax About page, seeded shop grid with signature highlight, responsive breakpoints, reduced‑motion handling, focus rings, alt text, and edge cases (empty catalog, missing image fallback, SSR‑safe clock) are all present and correct.
+Against the PRD's 41 discrete functional checks, **40 pass** and **1 is partial** (FR-S5 small-caps typography uses `uppercase` instead of `font-variant: small-caps`).
 
-Remaining work is almost entirely **verification / quality gates** from §6 of the PRD (Lighthouse budget, cross‑viewport manual QA, deployment confirmation) plus a handful of small fidelity nits in existing components. There is no missing feature area.
+What's still unverified — and therefore the real remaining risk — is the PRD's **Definition of Done** in §6.1: Lighthouse (Performance ≥ 90, Accessibility ≥ 95), cross-viewport manual QA (375/768/1280/1920), and whether `npm run lint` / `npm run typecheck` currently run clean. None of these are code gaps; they are verification gaps.
 
-Lint passes clean (`next lint` → 0 errors/warnings). Typecheck passes clean (`tsc --noEmit` → 0 issues).
+**Bottom line:** Implementation work is effectively done. The remaining work is **one styling tweak** + **verification / polish pass**.
 
 ---
 
-## 2. Completed Features (PRD FR → code)
+## 2. Completed Features
 
-### 2.1 Global (§3.1)
-| FR | Status | Evidence |
-|---|---|---|
-| FR‑G1 Custom cursor (8px → 24px, touch‑disabled) | ✅ | `src/components/Cursor.tsx:5-55` — `(hover: hover)` gate, interactive‑target detection, `mix-blend-difference` dot |
-| FR‑G2 BarButton signature fill | ✅ | `src/components/BarButton.tsx:17-47` — `scaleX 0→1`, `transform-origin:left`, 500ms, label color inverts with 100ms delay |
-| FR‑G3 Page transitions (fade + y:12→0, 0.4s, cubic ease) | ✅ | `src/components/PageTransition.tsx:9-18` — `AnimatePresence mode="wait"`, exact ease `[0.22,1,0.36,1]` |
-| FR‑G4 `site.config.ts` | ✅ | `src/config/site.config.ts:11-26` — brandName, logoSvgPath, taglines (2), colors, socials (5) |
-| FR‑G5 Products from JSON | ✅ | `src/content/products.json` + `src/lib/products.ts` (typed loader) |
+All are present with file references. Statuses reflect static code review only (no runtime Lighthouse run).
 
-### 2.2 Landing `/` (§3.2)
-| FR | Status | Evidence |
-|---|---|---|
-| FR‑L1 `#F5F4F0`, centered, min‑h 100vh | ✅ | `src/app/page.tsx:15` |
-| FR‑L2 Live timestamp `MM/DD/YYYY, h:mm:ss A`, 1s tick, SSR‑safe | ✅ | `src/components/Timestamp.tsx:5-32` (empty → hydrate → `setInterval 1000`) |
-| FR‑L3 Inline graffiti SVG, 70vw/420px | ✅ | `src/components/Logo.tsx:6-32` (inlined via `fs.readFileSync`); sizing at `src/app/page.tsx:19` |
-| FR‑L4 4 × 320×48 bar‑buttons, correct labels | ✅ | `src/app/page.tsx:6-32`, `BarButton.tsx:33-36` |
-| FR‑L5 Hover sweep | ✅ | `BarButton.tsx:41-43` |
-| FR‑L6 Routes to `/shop /contact /lookbook /pre-order` | ✅ | All four page files present |
-| FR‑L7 Social row fb/ig/yt/tt/x, 20px, 1.15x hover | ✅ | `src/components/SocialRow.tsx:30-51` |
-| FR‑L8 No header/footer on landing | ✅ | `src/app/page.tsx` has no `<Nav>` / footer |
+### Global (FR-G1 … FR-G5)
+- **FR-G1** Custom cursor — `src/components/Cursor.tsx:1-59`. 8px dot, scales 3× on interactive hover, early-exits on `(hover: hover)` miss.
+- **FR-G2** Signature fill — `src/components/BarButton.tsx:16-76`. `scaleX 0→1`, 500ms, ease `[0.65, 0, 0.35, 1]`, label flips with 100ms delay.
+- **FR-G3** Page transitions — `src/components/PageTransition.tsx:12-22`. Fade + `y:12→0`, 0.4s, ease `[0.22, 1, 0.36, 1]`, reduced-motion → fade only.
+- **FR-G4** Config — `src/config/site.config.ts:11-26`. `brandName`, `logoSvgPath`, `taglines[2]`, `colors`, `socials[]`.
+- **FR-G5** Products JSON — `src/content/products.json` (6 products, 1 signature).
 
-### 2.3 Home / About `/home` (§3.3)
-| FR | Status | Evidence |
-|---|---|---|
-| FR‑H1 Light bg, wordmark left, center nav | ✅ | `src/components/Nav.tsx:16-28` grid layout |
-| FR‑H2 Two‑column hero with eye SVG | ✅ | `src/app/home/page.tsx:28-84` |
-| FR‑H3 Parallax via `useScroll` + `useTransform`, 0.5x, text static, hover‑gated | ✅ | `src/app/home/page.tsx:11-22,38` |
+### Landing `/` (FR-L1 … FR-L8)
+- **FR-L1** `src/app/page.tsx:15` — `min-h-screen`, bg `--color-bg-light` (`#F5F4F0` in `globals.css:4`).
+- **FR-L2** `src/components/Timestamp.tsx:1-35` — server renders empty string, `setInterval` 1000ms after mount, exact `MM/DD/YYYY, h:mm:ss A` format.
+- **FR-L3** `src/app/page.tsx:19` — `w-[min(240px,70vw)] sm:w-[min(70vw,420px)]`.
+- **FR-L4** `src/app/page.tsx:23-32` — 4 buttons, 320×48 via `sm:!w-[320px]` + `h-12` in `BarButton.tsx:34`.
+- **FR-L5** Same as FR-G2.
+- **FR-L6** Routes wired in `src/app/page.tsx:6-11`.
+- **FR-L7** `src/components/SocialRow.tsx:4-40` — 5 icons, 20px, `hover:scale-[1.15] duration-200`.
+- **FR-L8** Landing renders no Nav and no footer.
 
-### 2.4 Shop `/shop` (§3.4)
-| FR | Status | Evidence |
-|---|---|---|
-| FR‑S1 `#0A0A0A`, white text | ✅ | `src/app/shop/page.tsx:11,21` |
-| FR‑S2 Loose 3/2/1 grid, seeded rotation `[-8°,+8°]` | ✅ | `src/app/shop/page.tsx:29`; `src/lib/seededRotation.ts:19-22` uses `mulberry32`‑style PRNG seeded by `product.id` — deterministic SSR/CSR |
-| FR‑S3 Transparent imagery, no card | ✅ | `src/components/ProductTile.tsx:26-48` |
-| FR‑S4 Hover `scale 1.05 rotate 0` | ✅ | `ProductTile.tsx:34` |
-| FR‑S5 Name small caps + `— LE {price} EGP` mono | ✅ | `ProductTile.tsx:13-15,50-56` |
-| FR‑S6 `signature:true` isolated + caption | ✅ | `src/app/shop/page.tsx:37-46`; `products.json` signature entry with `caption` |
+### Home `/home` (FR-H1 … FR-H3)
+- **FR-H1** `src/app/home/page.tsx:26-27` + `src/components/Nav.tsx:16-25` — wordmark top-left, nav center.
+- **FR-H2** `src/app/home/page.tsx:28-40` + eye SVG at `:57-84`.
+- **FR-H3** `src/app/home/page.tsx:11,22,38` — `useScroll` + `useTransform([0,1000], [0,-500])`, gated on `(hover: hover)` and `prefers-reduced-motion`.
 
-### 2.5 Responsive (§3.5) & A11y (§4.7)
-| FR | Status | Evidence |
-|---|---|---|
-| FR‑R1 Mobile vertical, logo 240px, full‑width buttons | ✅ | `src/app/page.tsx:19-31`; `BarButton.tsx:33-36` |
-| FR‑R2 No hamburger | ✅ | `Nav.tsx:16-28` always visible |
-| FR‑R3 Cursor disabled on `no-hover` | ✅ | `Cursor.tsx:9-10` |
-| `prefers-reduced-motion` | ✅ | `globals.css:29-38`, `useReducedMotion()` in BarButton/PageTransition/ProductTile/home |
-| Alt text | ✅ | Logo `aria-label`, product `alt`, socials `aria-label`, eye `aria-label` |
-| Focus rings | ✅ | `globals.css:40-43` + `focus-visible:ring-2` on BarButton and SocialRow |
+### Shop `/shop` (FR-S1, S2, S3, S4, S6)
+- **FR-S1** `src/app/shop/page.tsx:21` — `bg-[var(--color-bg-dark)] text-white`.
+- **FR-S2** Grid `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` (`shop/page.tsx:29`); rotation via `rotationFor(product.id)` → mulberry32 in `src/lib/seededRotation.ts:1-22`.
+- **FR-S3** `src/components/ProductTile.tsx:55-64` — `object-contain`, no border/shadow.
+- **FR-S4** `src/components/ProductTile.tsx:34-41` — `whileHover: { scale: 1.05, rotate: 0 }`, 300ms.
+- **FR-S6** `src/app/shop/page.tsx:37-46` — signature piece isolated, `mt-32`, caption below.
 
-### 2.6 Edge Cases (§6.2)
-| Scenario | Status | Evidence |
-|---|---|---|
-| Empty `products.json` → "DROP LOADING…" | ✅ | `src/app/shop/page.tsx:9-18` |
-| Missing product image → fallback SVG | ✅ | `ProductTile.tsx:11,46`; `public/fallback-garment.svg` present |
-| Timestamp hydration safety | ✅ | `Timestamp.tsx:19-25` renders `\u00A0` placeholder server‑side |
-| Inline logo, no flash | ✅ | `Logo.tsx:6-31` RSC reads file at build, inlines via `dangerouslySetInnerHTML` |
+### Responsive (FR-R1 … FR-R3)
+- **FR-R1** Logo 240px mobile, buttons full-width via `fullWidth` prop + `sm:!w-[320px]` override.
+- **FR-R2** `src/components/Nav.tsx:16` — grid layout, links always visible.
+- **FR-R3** `src/components/Cursor.tsx:9-10` — early return when `(hover: hover)` fails.
 
-### 2.7 Stub routes (§7.1 step 8)
-- `src/app/contact/page.tsx` — Nav + headline + `mailto:` + 2× `<BarButton>` ✅
-- `src/app/lookbook/page.tsx` — Nav + placeholder + BarButton ✅
-- `src/app/pre-order/page.tsx` — Nav + placeholder + BarButton ✅
+### Stubs
+- `src/app/contact/page.tsx`, `src/app/lookbook/page.tsx`, `src/app/pre-order/page.tsx` all exist with BarButton-based placeholders.
+
+### Edge cases & accessibility
+- Empty products → `"DROP LOADING…"` at `src/app/shop/page.tsx:9-17`.
+- Missing image fallback → `src/components/ProductTile.tsx:11,62` → `/public/fallback-garment.svg` (exists).
+- `useReducedMotion()` applied in BarButton, ProductTile, PageTransition, home parallax.
+- Focus rings via `focus-visible:ring-2 focus-visible:ring-current` + `globals.css:40-43`.
+- Alt text: `ProductTile.tsx:58` — `${name} (${category})`.
+- `next.config.ts:6` — `remotePatterns: []` (restrictive).
 
 ---
 
 ## 3. Partially Completed
 
-These are either fidelity nits or Acceptance‑Criteria checks that have not been *verified* even though the underlying code appears correct.
-
-| Item | PRD ref | Gap | Action |
-|---|---|---|---|
-| ~~ProductTile hover transition duration~~ | FR‑S4 "300ms ease‑out" | **RESOLVED turn 5.** `whileHover` / `whileTap` now carry explicit `transition: { duration: 0.3, ease: [0.22,1,0.36,1] }` (`ProductTile.tsx:34-51`). | — |
-| ~~Landing product stagger on `/shop` entry~~ | §5.4 "100ms stagger" | **RESOLVED.** Per‑tile delay `index * 0.1` on the mount transition (`ProductTile.tsx:31`) produces the 100ms stagger without requiring a `variants` container. | — |
-| ~~Landing JS bundle budget~~ | §4.5 "< 120 KB gzip" | **MEASURED turn 5.** `next build`: landing route First Load JS = 148 KB uncompressed (~60 KB gzip — well inside budget). Shop 153 KB / Home 151 KB similarly fine. | — |
-| Lighthouse ≥ 90 mobile / A11y ≥ 95 | §4.5, §6.1 | Not measured in this audit. | Run `chrome-devtools lighthouse_audit` on deployed or local prod build. |
-| LCP < 2.0s on Fast 3G, landing JS < 120 KB gzip | §4.5 | Not measured. | `next build` → inspect route bundle sizes; trace LCP. |
-| Framer Motion code‑split / `motion/react` | §4.5, §7.2 | Current imports are plain `"framer-motion"` across components (`BarButton`, `Cursor`, `PageTransition`, `ProductTile`, `home/page.tsx`). No dynamic `import()` gating. | Consider switching to `motion/react` tree‑shakeable entry or `dynamic(() => import(...), { ssr: false })` for heavy client‑only pieces if bundle budget is violated. |
-| Cross‑viewport manual verification (375 / 768 / 1280 / 1920) | §6.1 | Not executed in this audit. | Open each breakpoint in browser; screenshot. |
-| Firebase App Hosting deployment | §4.2, §7.1 step 1 | No `firebase.json` / `apphosting.yaml` in repo; unclear if live `.hosted.app` URL exists. | Confirm deploy pipeline or create it per global rule "Deploy Before Features". |
-| "Social row 20px black icons" | FR‑L7 | Current icons inherit `currentColor` from parent `<a class="text-black">`; effectively black on the landing light background, but the color is not hard‑pinned. | Acceptable; note for future theme re‑use. |
+### FR-S5 — Product name "small caps" uses `uppercase` instead
+- **Where:** `src/components/ProductTile.tsx:67`
+- **Current:** `className="... uppercase tracking-[0.25em] ..."`
+- **PRD says:** "NAME in small caps + `— LE {price} EGP` in monospace."
+- **Gap:** `text-transform: uppercase` makes every letter a full-height capital. True small-caps uses `font-variant-caps: small-caps` (or OpenType `font-feature-settings: "smcp"`) so lowercase-input letters render as smaller capitals. The price half (`— LE {formatPrice} EGP`, `ProductTile.tsx:71`) is correct.
+- **Fix:** drop `uppercase`, add `[font-variant-caps:small-caps]`, and change the source string to mixed/lowercase so the feature is visible. Caveat: Inter/JetBrains Mono have no true small-caps glyphs; browser will synthesize unless a font with `smcp` is loaded.
 
 ---
 
 ## 4. Not Started
 
-Nothing from §3 (Functional) or §4 (Technical) is untouched.
+**None at the code level.** Every FR in the PRD has at least partial implementation.
 
-The only PRD items with no code representation are those explicitly called out as **Out of Scope v1** (§7.4): cart/checkout, CMS, i18n, auth, analytics. No action required.
+What remains untouched from §6.1 Definition of Done is **verification**, not implementation:
+- No evidence in repo that `npm run lint`, `npm run typecheck`, or Lighthouse have been run against the current HEAD.
+- No manual QA record for 375 / 768 / 1280 / 1920px viewports.
+- Performance budget (landing JS < 120 KB gzip, LCP < 2.0s on Fast 3G) is unverified.
+- `prefers-reduced-motion` behavior is wired but not tested end-to-end.
 
 ---
 
 ## 5. Priority Order
 
-Ranked by remaining value / blocking nature:
-
-1. ~~**Lighthouse run (mobile throttled)**~~ — **DONE turn 6.** A11y / BestPractices / SEO all 100 on `/`, `/shop`, `/home` after fixing two `color-contrast` violations (`shop` catalog label `text-white/40` → `/70`; `home` & stub pages `text-black/50` → `/70`). Note: this Lighthouse tool omits Performance category; a full perf score still needs a standalone Lighthouse run against a deployed URL.
-2. **Manual viewport sweep** at 375 / 768 / 1280 / 1920 on all 6 routes — still pending visual QA.
-3. **Firebase App Hosting deploy** — repo has no `apphosting.yaml`; global rule "Deploy Before Features" still unmet.
-4. **Bundle / `motion/react` audit** — not required, current gzip ≈ 60 KB < 120 KB budget. Skip unless a later change regresses.
+1. **FR-S5 small-caps fix** — tiny scoped edit in `ProductTile.tsx`. Do this before any QA run so screenshots are final.
+2. **`npm run lint` + `npm run typecheck`** — gate per global CLAUDE.md build checklist; fix anything that surfaces.
+3. **Lighthouse mobile run** on `/` and `/shop` — confirm Performance ≥ 90, Accessibility ≥ 95. If perf fails, profile Framer Motion bundle and consider dynamic import on shop-only animations (PRD §4.5, §7.2).
+4. **Manual QA matrix** — 375 / 768 / 1280 / 1920 × `/`, `/home`, `/shop`, stubs. Watch for: logo sizing, grid wrap, bar-button width, parallax disabled on touch, cursor absent on touch.
+5. **Reduced-motion E2E** — toggle OS setting, verify fill is instant, parallax dead, transitions fade-only.
+6. **Owner-edit smoke test** — change `brandName` in `site.config.ts` and add a 7th product in `products.json`; confirm both propagate with no other edits (FR-G4, FR-G5 acceptance).
 
 ---
 
 ## 6. Next Steps (Actionable)
 
-- [ ] `npm run build` → record per‑route First Load JS; compare landing route against 120 KB gzip budget.
-- [ ] Run Lighthouse (mobile, throttled) on `/`, `/home`, `/shop`; capture Performance and Accessibility scores; file issues only if < 90 / < 95.
-- [ ] Visually QA `/`, `/home`, `/shop`, `/contact`, `/lookbook`, `/pre-order` at 375, 768, 1280, 1920; verify no hamburger, logo sizing, bar‑button width switch, parallax on desktop only.
-- [ ] `src/components/ProductTile.tsx:34` — add explicit `transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}` alongside the `whileHover` target.
-- [ ] `src/app/shop/page.tsx:29` — wrap grid in `motion.div` with `variants={{ show: { transition: { staggerChildren: 0.1 } } }}`; convert `ProductTile` initial/animate to `variants`.
-- [ ] Verify or create Firebase App Hosting config (`apphosting.yaml`) and confirm `.hosted.app` URL renders current `main`.
-- [ ] After 1–3 are green, tick all boxes in PRD §6.1 and close the gap.
+- [ ] Edit `src/components/ProductTile.tsx:67` — replace `uppercase` with `[font-variant-caps:small-caps]` and lower-case the rendered `product.name`, OR confirm with Ahmed that `uppercase` is the accepted visual (PRD language is loose) and close FR-S5 as-is.
+- [ ] Run `npm run lint && npm run typecheck` from `C:\code\marketWebsite`; fix any output.
+- [ ] Run Lighthouse on deployed `.hosted.app` URL (mobile preset) for `/` and `/shop`; record scores.
+- [ ] Walk the four viewport widths on each route; screenshot anything that breaks.
+- [ ] Flip OS reduced-motion; confirm BarButton fill, shop tile animation, page transitions, home parallax all degrade correctly.
+- [ ] Swap `brandName` in `site.config.ts` and revert — confirm wordmark / landing / nav all update.
+- [ ] Append a 7th product to `products.json` with a fresh id — confirm it appears on `/shop` at a new deterministic rotation with no code changes.
 
----
-
-**End of gap analysis.**
+Once items 1–6 pass, the PRD's Definition of Done (§6.1) is satisfied and v1 can ship.
