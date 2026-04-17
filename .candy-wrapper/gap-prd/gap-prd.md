@@ -11,7 +11,7 @@
 
 The site is **substantially complete**. All six routes render, the signature BarButton fill animation is implemented correctly, the seeded-rotation SSR strategy is in place, and accessibility affordances (reduced-motion, focus rings, alt text, touch-aware cursor/parallax) are wired through.
 
-Against the PRD's 41 discrete functional checks, **40 pass** and **1 is partial** (FR-S5 small-caps typography uses `uppercase` instead of `font-variant: small-caps`).
+Against the PRD's 41 discrete functional checks, **41 pass** as of turn 7 — FR-S5 small-caps fixed at `src/components/ProductTile.tsx:67` via `[font-variant-caps:all-small-caps]`. `npm run lint` and `npx tsc --noEmit` both clean on HEAD.
 
 What's still unverified — and therefore the real remaining risk — is the PRD's **Definition of Done** in §6.1: Lighthouse (Performance ≥ 90, Accessibility ≥ 95), cross-viewport manual QA (375/768/1280/1920), and whether `npm run lint` / `npm run typecheck` currently run clean. None of these are code gaps; they are verification gaps.
 
@@ -72,12 +72,7 @@ All are present with file references. Statuses reflect static code review only (
 
 ## 3. Partially Completed
 
-### FR-S5 — Product name "small caps" uses `uppercase` instead
-- **Where:** `src/components/ProductTile.tsx:67`
-- **Current:** `className="... uppercase tracking-[0.25em] ..."`
-- **PRD says:** "NAME in small caps + `— LE {price} EGP` in monospace."
-- **Gap:** `text-transform: uppercase` makes every letter a full-height capital. True small-caps uses `font-variant-caps: small-caps` (or OpenType `font-feature-settings: "smcp"`) so lowercase-input letters render as smaller capitals. The price half (`— LE {formatPrice} EGP`, `ProductTile.tsx:71`) is correct.
-- **Fix:** drop `uppercase`, add `[font-variant-caps:small-caps]`, and change the source string to mixed/lowercase so the feature is visible. Caveat: Inter/JetBrains Mono have no true small-caps glyphs; browser will synthesize unless a font with `smcp` is loaded.
+**None.** FR-S5 closed in turn 7 — see `src/components/ProductTile.tsx:67`. Used `all-small-caps` so the existing UPPER-case `products.json` source still renders as small capitals without altering JSON.
 
 ---
 
@@ -106,8 +101,8 @@ What remains untouched from §6.1 Definition of Done is **verification**, not im
 
 ## 6. Next Steps (Actionable)
 
-- [ ] Edit `src/components/ProductTile.tsx:67` — replace `uppercase` with `[font-variant-caps:small-caps]` and lower-case the rendered `product.name`, OR confirm with Ahmed that `uppercase` is the accepted visual (PRD language is loose) and close FR-S5 as-is.
-- [ ] Run `npm run lint && npm run typecheck` from `C:\code\marketWebsite`; fix any output.
+- [x] FR-S5 fixed — `ProductTile.tsx:67` uses `[font-variant-caps:all-small-caps]`.
+- [x] `npm run lint` clean; `npx tsc --noEmit` clean (turn 7).
 - [ ] Run Lighthouse on deployed `.hosted.app` URL (mobile preset) for `/` and `/shop`; record scores.
 - [ ] Walk the four viewport widths on each route; screenshot anything that breaks.
 - [ ] Flip OS reduced-motion; confirm BarButton fill, shop tile animation, page transitions, home parallax all degrade correctly.

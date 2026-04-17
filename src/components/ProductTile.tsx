@@ -64,7 +64,7 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
         />
       </div>
       <figcaption className="flex flex-col items-center gap-1 text-center">
-        <span className="font-mono text-[11px] tracking-[0.25em] uppercase text-white/90">
+        <span className="font-mono text-[11px] tracking-[0.25em] [font-variant-caps:all-small-caps] text-white/90">
           {product.name}
         </span>
         <span className="font-mono text-[11px] tracking-[0.15em] text-white/60">
