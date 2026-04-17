@@ -22,7 +22,7 @@ export default function ShopPage() {
       <Nav invert />
 
       <main className="px-6 sm:px-10 pb-24">
-        <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/40 mt-6 mb-10 sm:mb-16 text-center">
+        <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/70 mt-6 mb-10 sm:mb-16 text-center">
           &mdash; catalog &mdash;
         </p>
 

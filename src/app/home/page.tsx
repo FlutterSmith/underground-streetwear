@@ -41,7 +41,7 @@ export default function HomePage() {
         </section>
 
         <section className="mt-40 max-w-3xl mx-auto">
-          <p className="font-mono text-xs tracking-[0.2em] uppercase text-black/50 mb-4">
+          <p className="font-mono text-xs tracking-[0.2em] uppercase text-black/70 mb-4">
             &mdash; about
           </p>
           <p className="text-xl md:text-2xl leading-relaxed">

@@ -6,7 +6,7 @@ export default function PreOrderPage() {
     <>
       <Nav />
       <main className="min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center gap-10 px-6 pb-20">
-        <p className="font-mono text-xs tracking-[0.3em] uppercase text-black/50">&mdash; pre-order &mdash;</p>
+        <p className="font-mono text-xs tracking-[0.3em] uppercase text-black/70">&mdash; pre-order &mdash;</p>
         <h1 className="text-4xl sm:text-6xl font-medium max-w-2xl text-center leading-tight">
           next drop opens soon.
         </h1>

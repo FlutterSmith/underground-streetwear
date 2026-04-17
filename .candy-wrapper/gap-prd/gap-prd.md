@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-**Status:** ~98% of functional PRD requirements are implemented and wired end‑to‑end. Turn 5 closed the two remaining fidelity nits (ProductTile hover transition, shop grid stagger verification) and measured the JS bundle budget.
+**Status:** ~99% of functional PRD requirements are implemented and wired end‑to‑end. Turn 5 closed the two remaining fidelity nits (ProductTile hover transition, shop grid stagger verification) and measured the JS bundle budget. Turn 6 ran Lighthouse (mobile, production build) on `/`, `/shop`, `/home` and fixed two color‑contrast violations that surfaced; all three now score A11y 100 / Best Practices 100 / SEO 100.
 
 The scaffold, design tokens, config, data model, all six routes, signature bar‑button interaction, page transitions, custom cursor, live timestamp, inline logo, parallax About page, seeded shop grid with signature highlight, responsive breakpoints, reduced‑motion handling, focus rings, alt text, and edge cases (empty catalog, missing image fallback, SSR‑safe clock) are all present and correct.
 
@@ -114,8 +114,8 @@ The only PRD items with no code representation are those explicitly called out a
 
 Ranked by remaining value / blocking nature:
 
-1. **Lighthouse run (mobile throttled)** on `/`, `/home`, `/shop` — needs Perf ≥ 90, A11y ≥ 95 per §4.5, §6.1.
-2. **Manual viewport sweep** at 375 / 768 / 1280 / 1920 on all 6 routes.
+1. ~~**Lighthouse run (mobile throttled)**~~ — **DONE turn 6.** A11y / BestPractices / SEO all 100 on `/`, `/shop`, `/home` after fixing two `color-contrast` violations (`shop` catalog label `text-white/40` → `/70`; `home` & stub pages `text-black/50` → `/70`). Note: this Lighthouse tool omits Performance category; a full perf score still needs a standalone Lighthouse run against a deployed URL.
+2. **Manual viewport sweep** at 375 / 768 / 1280 / 1920 on all 6 routes — still pending visual QA.
 3. **Firebase App Hosting deploy** — repo has no `apphosting.yaml`; global rule "Deploy Before Features" still unmet.
 4. **Bundle / `motion/react` audit** — not required, current gzip ≈ 60 KB < 120 KB budget. Skip unless a later change regresses.
 
