@@ -8,11 +8,13 @@ export default function ShopPage() {
 
   if (products.length === 0) {
     return (
-      <div className="min-h-screen bg-[var(--color-bg-dark)] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-bg-dark)] text-white flex flex-col">
         <Nav invert />
-        <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/60">
-          DROP LOADING&hellip;
-        </p>
+        <div className="flex-1 flex items-center justify-center">
+          <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/70">
+            DROP LOADING&hellip;
+          </p>
+        </div>
       </div>
     );
   }

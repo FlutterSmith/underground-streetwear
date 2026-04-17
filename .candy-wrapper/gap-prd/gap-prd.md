@@ -80,11 +80,14 @@ All are present with file references. Statuses reflect static code review only (
 
 **None at the code level.** Every FR in the PRD has at least partial implementation.
 
-What remains untouched from §6.1 Definition of Done is **verification**, not implementation:
-- No evidence in repo that `npm run lint`, `npm run typecheck`, or Lighthouse have been run against the current HEAD.
+What remains from §6.1 Definition of Done is **runtime verification**, not implementation:
+- `npm run lint` and `npx tsc --noEmit` clean on HEAD as of turn 8 (verified).
 - No manual QA record for 375 / 768 / 1280 / 1920px viewports.
-- Performance budget (landing JS < 120 KB gzip, LCP < 2.0s on Fast 3G) is unverified.
-- `prefers-reduced-motion` behavior is wired but not tested end-to-end.
+- Performance budget (landing JS < 120 KB gzip ≈ measured 60 KB in turn 5; LCP < 2.0s on Fast 3G) still needs deployed-URL Lighthouse run.
+- `prefers-reduced-motion` wired (BarButton, ProductTile, PageTransition, home parallax) but not tested end-to-end.
+
+### Turn 8 polish
+- Fixed `src/app/shop/page.tsx:9-18` empty-catalog branch — Nav was placed inside a centered flex container and rendered next to the message. Restructured as `flex-col` with Nav up top and the message centered in the remaining space. Also lifted the placeholder text from `white/60` → `white/70` to match the color-contrast policy from turn 6.
 
 ---
 
