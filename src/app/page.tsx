@@ -12,22 +12,22 @@ const entryLinks: { label: string; href: string }[] = [
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen w-full flex flex-col items-center justify-between px-4 sm:px-8 py-8 bg-[var(--color-bg-light)]">
+    <main className="min-h-screen w-full flex flex-col items-center justify-between px-4 md:px-8 py-8 bg-[var(--color-bg-light)]">
       <Timestamp />
 
-      <div className="flex flex-col items-center gap-10 sm:gap-14 flex-1 justify-center w-full">
-        <div className="w-[min(240px,70vw)] sm:w-[min(70vw,420px)]">
+      <div className="flex flex-col items-center gap-10 md:gap-14 flex-1 justify-center w-full">
+        <div className="w-[min(240px,70vw)] md:w-[min(70vw,420px)]">
           <Logo />
         </div>
 
-        <div className="flex flex-col items-center gap-3 w-full sm:w-auto px-4 sm:px-0">
+        <div className="flex flex-col items-center gap-3 w-full md:w-auto px-4 md:px-0">
           {entryLinks.map((l) => (
             <BarButton
               key={l.href}
               href={l.href}
               label={l.label}
               fullWidth
-              className="sm:!w-[320px]"
+              className="md:!w-[320px]"
             />
           ))}
         </div>

@@ -14,6 +14,10 @@ Remaining gaps are concentrated in (a) **verification / Definition-of-Done items
 
 **Rough completion: ~90% of functional requirements; ~70% of acceptance criteria verifiably met.**
 
+### Turn 10 updates
+- **FR-R1 landing breakpoint fixed** — `app/page.tsx` switched every `sm:` (640px) to `md:` (768px) for logo sizing, button width, container padding, and gap. Matches PRD "Mobile breakpoint < 768px: vertical stacking; logo reduced to 240px; bar-buttons become full-width minus 32px side padding" — previously the 640–767px range incorrectly rendered the desktop 420px logo and 320px buttons.
+- **Full verification** — `next lint` clean, `tsc --noEmit` clean, `next build` succeeds (9/9 static pages). Route sizes unchanged from turn 9.
+
 ### Turn 9 updates
 - **FR-S2 grid breakpoint fixed** — `app/shop/page.tsx:31` switched `sm:grid-cols-2` → `md:grid-cols-2` so the 2-col tier now flips at 768px per FR-R1.
 - **FR-S4 hover easing aligned** — `ProductTile.tsx` whileHover/whileTap transitions now use `ease: "easeOut"` (PRD §FR-S4 calls for plain ease-out, 300ms).
