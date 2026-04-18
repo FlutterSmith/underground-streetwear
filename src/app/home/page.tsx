@@ -1,9 +1,17 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Nav } from "@/components/Nav";
+import { Newsletter } from "@/components/Newsletter";
+import { BarButton } from "@/components/BarButton";
 import { siteConfig } from "@/config/site.config";
+import { products } from "@/lib/products";
+
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1579725854926-dbeab39780bc?w=1600&q=80&auto=format&fit=crop";
 
 export default function HomePage() {
   const reduced = useReducedMotion();
@@ -19,66 +27,96 @@ export default function HomePage() {
     return () => mql.removeEventListener("change", update);
   }, []);
 
-  const y = useTransform(scrollY, [0, 1000], [0, reduced || !parallaxEnabled ? 0 : -500]);
+  const y = useTransform(scrollY, [0, 1000], [0, reduced || !parallaxEnabled ? 0 : -180]);
+
+  const featured = products.slice(0, 3);
 
   return (
     <>
       <Nav />
-      <main ref={ref} className="min-h-[200vh] px-6 sm:px-12 pt-8 pb-24 bg-[var(--color-bg-light)] text-[var(--color-ink)]">
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start max-w-6xl mx-auto pt-8">
+      <main
+        ref={ref}
+        className="px-6 sm:px-12 pt-4 pb-24 bg-[var(--color-bg-light)] text-[var(--color-ink)]"
+      >
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center max-w-6xl mx-auto pt-8 min-h-[70vh]">
           <div className="flex flex-col gap-6 max-w-xl">
-            <p className="font-sans text-3xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight font-medium">
-              {siteConfig.taglines[0]}
+            <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-black/60">
+              SS 26 &mdash; Drop 01
             </p>
+            <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight font-medium">
+              {siteConfig.taglines[0]}
+            </h1>
             <p className="font-mono text-xs tracking-[0.25em] uppercase text-black/60">
               {siteConfig.taglines[1]}
             </p>
+            <div className="flex flex-wrap gap-3 mt-4">
+              <BarButton href="/shop" label="Shop the drop" />
+              <BarButton href="/lookbook" label="Lookbook" />
+            </div>
           </div>
 
-          <motion.div style={{ y }} className="relative flex justify-center md:justify-end">
-            <EyeIllustration />
+          <motion.div
+            style={{ y }}
+            className="relative aspect-[4/5] w-full max-w-md justify-self-center md:justify-self-end overflow-hidden"
+          >
+            <Image
+              src={HERO_IMAGE}
+              alt="Editorial hero"
+              fill
+              sizes="(max-width: 768px) 90vw, 420px"
+              className="object-cover grayscale contrast-[1.05]"
+              priority
+            />
           </motion.div>
         </section>
 
-        <section className="mt-40 max-w-3xl mx-auto">
-          <p className="font-mono text-xs tracking-[0.2em] uppercase text-black/70 mb-4">
-            &mdash; about
+        <section className="mt-32 max-w-3xl mx-auto text-center">
+          <p className="font-mono text-xs tracking-[0.3em] uppercase text-black/60 mb-4">
+            &mdash; about &mdash;
           </p>
           <p className="text-xl md:text-2xl leading-relaxed">
             An underground label for people who think the mainstream got too clean.
             Small drops. Heavy fabrics. No press releases.
           </p>
         </section>
+
+        <section className="mt-28 max-w-6xl mx-auto">
+          <div className="flex items-end justify-between mb-8">
+            <p className="font-mono text-xs tracking-[0.3em] uppercase text-black/60">
+              &mdash; featured &mdash;
+            </p>
+            <Link
+              href="/shop"
+              className="font-mono text-[11px] tracking-[0.25em] uppercase underline decoration-1 underline-offset-4 hover:opacity-60 transition-opacity"
+            >
+              See all
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {featured.map((p) => (
+              <Link key={p.id} href={`/shop/${p.id}`} className="group flex flex-col gap-3">
+                <div className="relative aspect-[3/4] bg-white overflow-hidden">
+                  <Image
+                    src={p.image}
+                    alt={p.name}
+                    fill
+                    sizes="(max-width: 640px) 90vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="flex items-center justify-between font-mono text-xs tracking-[0.2em] uppercase">
+                  <span>{p.name}</span>
+                  <span className="text-black/60">LE {p.priceEGP.toLocaleString("en-US")}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <div className="mt-32 border-t border-black/15">
+          <Newsletter />
+        </div>
       </main>
     </>
-  );
-}
-
-function EyeIllustration() {
-  return (
-    <svg
-      viewBox="0 0 300 260"
-      width="100%"
-      className="max-w-[360px] sm:max-w-[440px]"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="hand-drawn eye with dripping lashes"
-    >
-      <g fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M30 120 C 90 50, 210 50, 270 120 C 210 190, 90 190, 30 120 Z" />
-        <circle cx="150" cy="120" r="38" fill="#000" stroke="none" />
-        <circle cx="140" cy="110" r="7" fill="#fff" stroke="none" />
-        <path d="M60 90 L50 60" />
-        <path d="M95 75 L90 40" />
-        <path d="M150 70 L150 30" />
-        <path d="M205 75 L210 40" />
-        <path d="M240 90 L250 60" />
-        <path d="M60 155 L55 185 Q 60 200 65 185 L65 160" fill="#000" stroke="none" />
-        <path d="M100 165 L95 210 Q 100 225 105 210 L105 170" fill="#000" stroke="none" />
-        <path d="M150 170 L145 230 Q 150 250 155 230 L155 175" fill="#000" stroke="none" />
-        <path d="M200 165 L197 215 Q 202 228 207 215 L207 170" fill="#000" stroke="none" />
-        <path d="M240 155 L238 190 Q 243 202 248 190 L248 160" fill="#000" stroke="none" />
-      </g>
-    </svg>
   );
 }

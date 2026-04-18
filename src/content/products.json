@@ -3,43 +3,91 @@
     "id": "heavy-hoodie-01",
     "name": "HOODIE",
     "priceEGP": 2400,
-    "image": "/products/hoodie.svg",
-    "category": "hoodie"
+    "image": "https://images.unsplash.com/photo-1548958070-784df64f9c99?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1548958070-784df64f9c99?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1579572331145-5e53b299c64e?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1616703055375-b5e495a5c6fe?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "hoodie",
+    "description": "400gsm loop-back cotton. Boxy fit. Raw-cut seam along the hood. Garment-dyed for a washed hand-feel.",
+    "fabric": "100% cotton, garment-dyed",
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "id": "crew-tee-01",
     "name": "TEE",
     "priceEGP": 900,
-    "image": "/products/tee.svg",
-    "category": "tee"
+    "image": "https://images.unsplash.com/photo-1570358934903-35c0ff1bd95e?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1570358934903-35c0ff1bd95e?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1499971442178-8c10fdf5f6ac?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "tee",
+    "description": "240gsm open-end jersey. Dropped shoulder. Chest logo, tonal ink.",
+    "fabric": "100% open-end cotton",
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "id": "cargo-pants-01",
     "name": "PANTS",
     "priceEGP": 1800,
-    "image": "/products/pants.svg",
-    "category": "pants"
+    "image": "https://images.unsplash.com/photo-1590759483822-b2fee5aa6bd3?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1590759483822-b2fee5aa6bd3?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1627398924667-7f4ab354ab49?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1627910016961-ee310ef0b108?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "pants",
+    "description": "Heavy ripstop cargo. Hidden drawcord waist. Double-knee reinforcement. Deep thigh pockets.",
+    "fabric": "Ripstop cotton blend",
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "id": "ski-mask-01",
     "name": "MASK",
     "priceEGP": 500,
-    "image": "/products/mask.svg",
-    "category": "mask"
+    "image": "https://images.unsplash.com/photo-1583440194369-ac78b451536a?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1583440194369-ac78b451536a?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1528907460462-5cc6fb2bdba5?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1510933844587-60d4a40d74dd?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "mask",
+    "description": "Fine-gauge merino balaclava. 3-hole cut. Goes under a hood or stands alone.",
+    "fabric": "Merino wool",
+    "sizes": ["One size"]
   },
   {
     "id": "drop-shorts-01",
     "name": "SHORTS",
     "priceEGP": 1200,
-    "image": "/products/shorts.svg",
-    "category": "shorts"
+    "image": "https://images.unsplash.com/photo-1715532098304-1e81e1f42600?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1715532098304-1e81e1f42600?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1591741543032-bf439b4fd46c?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "shorts",
+    "description": "Mid-weight fleece shorts. Elastic waist, woven drawcord. Side split for walk.",
+    "fabric": "Brushed fleece",
+    "sizes": ["S", "M", "L", "XL"]
   },
   {
     "id": "signature-piece-01",
     "name": "THE PIECE",
     "priceEGP": 4200,
-    "image": "/products/signature.svg",
+    "image": "https://images.unsplash.com/photo-1617113930975-f9c7243ae527?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1617113930975-f9c7243ae527?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1585790619870-846207d5a58a?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1761896902115-49793a359daf?w=1200&q=80&auto=format&fit=crop"
+    ],
     "category": "other",
+    "description": "Hand-dyed, numbered run of 50. Overdyed canvas with raw-edge patchwork. No two are identical.",
+    "fabric": "Canvas, hand-dyed",
+    "sizes": ["M", "L", "XL"],
     "signature": true,
     "caption": "limited drop \u00b7 01"
   }

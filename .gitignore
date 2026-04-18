@@ -11,3 +11,6 @@ Thumbs.db
 .vercel/
 .turbo/
 coverage/
+.claude/
+.candy-wrapper/
+tsconfig.tsbuildinfo

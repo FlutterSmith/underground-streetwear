@@ -13,9 +13,18 @@ export type Product = {
   name: string;
   priceEGP: number;
   image: string;
+  gallery?: string[];
   category: ProductCategory;
+  description?: string;
+  fabric?: string;
+  sizes?: string[];
   signature?: boolean;
   caption?: string;
+  soldOut?: boolean;
 };
 
 export const products: Product[] = raw as Product[];
+
+export function findProduct(id: string): Product | undefined {
+  return products.find((p) => p.id === id);
+}

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Cursor } from "@/components/Cursor";
 import { PageTransition } from "@/components/PageTransition";
+import { CartDrawer } from "@/components/CartDrawer";
+import { CartProvider } from "@/lib/cart";
 import { siteConfig } from "@/config/site.config";
 import "./globals.css";
 
@@ -26,8 +28,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
       <body>
-        <Cursor />
-        <PageTransition>{children}</PageTransition>
+        <CartProvider>
+          <Cursor />
+          <PageTransition>{children}</PageTransition>
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

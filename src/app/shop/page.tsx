@@ -1,5 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { ProductTile } from "@/components/ProductTile";
+import { PageTheme } from "@/components/PageTheme";
 import { products } from "@/lib/products";
 
 export default function ShopPage() {
@@ -9,6 +10,7 @@ export default function ShopPage() {
   if (products.length === 0) {
     return (
       <div className="min-h-screen bg-[var(--color-bg-dark)] text-white flex flex-col">
+        <PageTheme mode="dark" />
         <Nav invert />
         <div className="flex-1 flex items-center justify-center">
           <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/70">
@@ -21,6 +23,7 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-[var(--color-bg-dark)] text-white">
+      <PageTheme mode="dark" />
       <Nav invert />
 
       <main className="px-6 sm:px-10 pb-24">

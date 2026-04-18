@@ -17,6 +17,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  background: var(--color-bg-dark);
+  color: var(--color-paper);
+}
+
 html.has-custom-cursor,
 html.has-custom-cursor * {
   cursor: none !important;
