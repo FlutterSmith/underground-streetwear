@@ -60,17 +60,28 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
             alt={`${product.name} (${product.category})`}
             fill
             sizes="(max-width: 768px) 60vw, 240px"
-            className="object-cover"
+            className={`object-cover ${product.soldOut ? "opacity-50 grayscale" : ""}`}
             onError={() => setSrc(FALLBACK)}
             priority={index < 3}
           />
+          {product.soldOut && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span className="font-mono text-[10px] tracking-[0.35em] uppercase bg-white text-black px-3 py-1.5">
+                Sold out
+              </span>
+            </div>
+          )}
         </div>
         <figcaption className="flex flex-col items-center gap-1 text-center">
           <span className="font-mono text-[11px] tracking-[0.25em] [font-variant-caps:all-small-caps] text-white/90">
             {product.name}
           </span>
           <span className="font-mono text-[11px] tracking-[0.15em] text-white/60">
-            &mdash; LE {formatPrice(product.priceEGP)} EGP
+            {product.soldOut ? (
+              <span className="text-white/40">&mdash; waitlist open</span>
+            ) : (
+              <>&mdash; LE {formatPrice(product.priceEGP)} EGP</>
+            )}
           </span>
         </figcaption>
       </motion.figure>

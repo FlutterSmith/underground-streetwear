@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Nav } from "@/components/Nav";
 import { Newsletter } from "@/components/Newsletter";
 import { BarButton } from "@/components/BarButton";
+import { Footer } from "@/components/Footer";
 import { siteConfig } from "@/config/site.config";
 import { products } from "@/lib/products";
 
@@ -117,6 +118,7 @@ export default function HomePage() {
           <Newsletter />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

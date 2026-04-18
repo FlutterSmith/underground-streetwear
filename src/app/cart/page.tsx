@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { BarButton } from "@/components/BarButton";
+import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
 
 function formatPrice(n: number): string {
@@ -29,6 +30,7 @@ export default function CartPage() {
           </p>
           <BarButton href="/shop" label="Go to shop" />
         </main>
+        <Footer />
       </>
     );
   }
@@ -139,7 +141,7 @@ export default function CartPage() {
               <span>Total</span>
               <span>LE {formatPrice(subtotal)}</span>
             </div>
-            <BarButton href="/pre-order" label="Checkout" fullWidth />
+            <BarButton href="/checkout" label="Checkout" fullWidth />
             <Link
               href="/shop"
               className="text-center font-mono text-[11px] tracking-[0.25em] uppercase text-black/60 hover:text-black transition-colors"
@@ -149,6 +151,7 @@ export default function CartPage() {
           </aside>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

@@ -57,7 +57,8 @@
     "category": "mask",
     "description": "Fine-gauge merino balaclava. 3-hole cut. Goes under a hood or stands alone.",
     "fabric": "Merino wool",
-    "sizes": ["One size"]
+    "sizes": ["One size"],
+    "soldOut": true
   },
   {
     "id": "drop-shorts-01",

@@ -47,3 +47,44 @@ html.has-custom-cursor .custom-cursor-dot {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
+
+.prose-underground {
+  color: rgba(0, 0, 0, 0.75);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+.prose-underground h2 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+.prose-underground h2:first-child {
+  margin-top: 0;
+}
+.prose-underground p {
+  margin-bottom: 1rem;
+}
+.prose-underground ul {
+  list-style: none;
+  padding-left: 0;
+}
+.prose-underground ul li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.4rem;
+}
+.prose-underground ul li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: rgba(0, 0, 0, 0.4);
+}
+.prose-underground a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}

@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Nav } from "@/components/Nav";
 import { BarButton } from "@/components/BarButton";
 import { FormField } from "@/components/FormField";
+import { Footer } from "@/components/Footer";
 import { products } from "@/lib/products";
 
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
@@ -72,6 +73,7 @@ export default function PreOrderPage() {
           </p>
           <BarButton href="/shop" label="Keep browsing" />
         </main>
+        <Footer />
       </>
     );
   }
@@ -199,6 +201,7 @@ export default function PreOrderPage() {
           </p>
         </form>
       </main>
+      <Footer />
     </>
   );
 }

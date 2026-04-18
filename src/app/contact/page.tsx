@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Nav } from "@/components/Nav";
 import { BarButton } from "@/components/BarButton";
 import { FormField } from "@/components/FormField";
+import { Footer } from "@/components/Footer";
 import { siteConfig } from "@/config/site.config";
 
 type Errors = Partial<Record<"name" | "email" | "message" | "topic", string>>;
@@ -67,6 +68,7 @@ export default function ContactPage() {
           </p>
           <BarButton href="/" label="Back home" />
         </main>
+        <Footer />
       </>
     );
   }
@@ -176,6 +178,7 @@ export default function ContactPage() {
           </div>
         </form>
       </main>
+      <Footer />
     </>
   );
 }

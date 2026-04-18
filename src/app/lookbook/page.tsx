@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { BarButton } from "@/components/BarButton";
 import { PageTheme } from "@/components/PageTheme";
+import { Footer } from "@/components/Footer";
 import { lookbook } from "@/lib/lookbook";
 
 export default function LookbookPage() {
@@ -85,6 +86,7 @@ export default function LookbookPage() {
           </div>
         </section>
       </main>
+      <Footer invert />
     </div>
   );
 }

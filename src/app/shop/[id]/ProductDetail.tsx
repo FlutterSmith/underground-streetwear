@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { PageTheme } from "@/components/PageTheme";
+import { Footer } from "@/components/Footer";
 import type { Product } from "@/lib/products";
 import { products } from "@/lib/products";
 import { useCart } from "@/lib/cart";
@@ -26,6 +27,8 @@ export function ProductDetail({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const [showSizeError, setShowSizeError] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistState, setWaitlistState] = useState<"idle" | "busy" | "ok" | "err">("idle");
   const reduced = useReducedMotion();
   const { add } = useCart();
 
@@ -39,6 +42,18 @@ export function ProductDetail({ product }: { product: Product }) {
     add(product, size, qty);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1400);
+  }
+
+  async function handleWaitlist(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waitlistEmail)) {
+      setWaitlistState("err");
+      return;
+    }
+    setWaitlistState("busy");
+    // TODO(template-buyer): POST to your waitlist endpoint.
+    await new Promise((r) => setTimeout(r, 500));
+    setWaitlistState("ok");
   }
 
   return (
@@ -80,6 +95,11 @@ export function ProductDetail({ product }: { product: Product }) {
               {product.signature && (
                 <span className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.3em] uppercase bg-white text-black px-2 py-1">
                   Signature
+                </span>
+              )}
+              {product.soldOut && (
+                <span className="absolute top-4 right-4 font-mono text-[10px] tracking-[0.3em] uppercase bg-red-600 text-white px-2 py-1">
+                  Sold out
                 </span>
               )}
             </div>
@@ -136,6 +156,49 @@ export function ProductDetail({ product }: { product: Product }) {
               </div>
             )}
 
+            {product.soldOut ? (
+              <div className="border border-white/20 p-5 flex flex-col gap-4">
+                <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-white/70">
+                  &mdash; waitlist &mdash;
+                </p>
+                <p className="text-white/70 text-sm leading-relaxed">
+                  Drop sold out. Leave your email and we&apos;ll tell you first when
+                  this piece restocks or a successor drops.
+                </p>
+                {waitlistState === "ok" ? (
+                  <p className="font-mono text-xs tracking-[0.25em] uppercase text-white/90">
+                    &mdash; you&apos;re on it. &mdash;
+                  </p>
+                ) : (
+                  <form onSubmit={handleWaitlist} className="flex items-stretch border-b border-white/40">
+                    <input
+                      type="email"
+                      value={waitlistEmail}
+                      onChange={(e) => {
+                        setWaitlistEmail(e.target.value);
+                        if (waitlistState === "err") setWaitlistState("idle");
+                      }}
+                      placeholder="you@domain.com"
+                      aria-label="Waitlist email"
+                      className="flex-1 bg-transparent outline-none py-3 font-mono text-sm text-white placeholder:text-white/30"
+                    />
+                    <button
+                      type="submit"
+                      disabled={waitlistState === "busy"}
+                      className="px-5 font-mono text-[11px] tracking-[0.3em] uppercase bg-white text-black disabled:opacity-40"
+                    >
+                      {waitlistState === "busy" ? "..." : "Notify me"}
+                    </button>
+                  </form>
+                )}
+                {waitlistState === "err" && (
+                  <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-red-400">
+                    Invalid email
+                  </p>
+                )}
+              </div>
+            ) : (
+            <>
             <div>
               <div className="flex items-center justify-between mb-3">
                 <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-white/70">
@@ -215,6 +278,8 @@ export function ProductDetail({ product }: { product: Product }) {
                 {justAdded ? "Added to cart" : "Add to cart"}
               </span>
             </button>
+            </>
+            )}
 
             <div className="text-xs font-mono tracking-[0.2em] uppercase text-white/50 space-y-1.5 border-t border-white/10 pt-5">
               <p>Ships within 5 business days</p>
@@ -259,6 +324,7 @@ export function ProductDetail({ product }: { product: Product }) {
           </section>
         )}
       </main>
+      <Footer invert />
     </div>
   );
 }
