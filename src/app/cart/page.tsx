@@ -6,13 +6,15 @@ import { Nav } from "@/components/Nav";
 import { BarButton } from "@/components/BarButton";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
+import { useCurrency } from "@/lib/currency";
 
-function formatPrice(n: number): string {
-  return n.toLocaleString("en-US");
-}
+const FREE_SHIP_THRESHOLD = 3000;
 
 export default function CartPage() {
   const { items, subtotal, count, setQty, remove, clear } = useCart();
+  const { format } = useCurrency();
+  const remaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
+  const progress = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
 
   if (items.length === 0) {
     return (
@@ -39,7 +41,7 @@ export default function CartPage() {
     <>
       <Nav />
       <main className="max-w-5xl mx-auto px-6 sm:px-10 pb-24">
-        <div className="flex items-end justify-between mt-6 mb-10">
+        <div className="flex items-end justify-between mt-6 mb-6">
           <p className="font-mono text-xs tracking-[0.3em] uppercase text-black/70">
             &mdash; cart ({count}) &mdash;
           </p>
@@ -50,6 +52,20 @@ export default function CartPage() {
           >
             Clear all
           </button>
+        </div>
+
+        <div className="mb-10 flex flex-col gap-2">
+          <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-black/60">
+            {remaining > 0
+              ? `Add ${format(remaining)} for free shipping`
+              : "Free shipping unlocked"}
+          </p>
+          <div className="h-1 bg-black/10 relative overflow-hidden">
+            <div
+              className="absolute inset-y-0 left-0 bg-black transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-10">
@@ -82,7 +98,7 @@ export default function CartPage() {
                       </p>
                     </div>
                     <p className="font-mono text-sm whitespace-nowrap">
-                      LE {formatPrice(it.priceEGP * it.qty)}
+                      {format(it.priceEGP * it.qty)}
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-auto">
@@ -126,11 +142,11 @@ export default function CartPage() {
             </p>
             <div className="flex items-center justify-between font-mono text-sm">
               <span>Subtotal</span>
-              <span>LE {formatPrice(subtotal)}</span>
+              <span>{format(subtotal)}</span>
             </div>
             <div className="flex items-center justify-between font-mono text-xs text-black/60">
               <span>Shipping</span>
-              <span>At checkout</span>
+              <span>{remaining === 0 ? "FREE" : "At checkout"}</span>
             </div>
             <div className="flex items-center justify-between font-mono text-xs text-black/60">
               <span>Taxes</span>
@@ -139,7 +155,7 @@ export default function CartPage() {
             <div className="h-px bg-black/15" />
             <div className="flex items-center justify-between font-mono text-sm">
               <span>Total</span>
-              <span>LE {formatPrice(subtotal)}</span>
+              <span>{format(subtotal)}</span>
             </div>
             <BarButton href="/checkout" label="Checkout" fullWidth />
             <Link

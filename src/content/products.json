@@ -12,7 +12,14 @@
     "category": "hoodie",
     "description": "400gsm loop-back cotton. Boxy fit. Raw-cut seam along the hood. Garment-dyed for a washed hand-feel.",
     "fabric": "100% cotton, garment-dyed",
-    "sizes": ["S", "M", "L", "XL"]
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 18,
+    "releasedAt": "2026-03-15",
+    "reviews": [
+      { "author": "Y. M.", "rating": 5, "title": "heaviest hoodie I own", "body": "Genuinely thick. Fit is true to size, maybe a hair boxy. Holds up after a dozen washes.", "date": "2026-04-02", "verified": true },
+      { "author": "S. K.", "rating": 5, "title": "worth the price", "body": "I was nervous spending this much on a hoodie. Not anymore. Seams are tight and it doesn't pill.", "date": "2026-03-28", "verified": true },
+      { "author": "A. R.", "rating": 4, "title": "great but heavy", "body": "Awesome quality, just don't expect to wear this in summer.", "date": "2026-03-22", "verified": true }
+    ]
   },
   {
     "id": "crew-tee-01",
@@ -27,7 +34,13 @@
     "category": "tee",
     "description": "240gsm open-end jersey. Dropped shoulder. Chest logo, tonal ink.",
     "fabric": "100% open-end cotton",
-    "sizes": ["S", "M", "L", "XL"]
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 4,
+    "releasedAt": "2026-04-01",
+    "reviews": [
+      { "author": "M. H.", "rating": 5, "title": "perfect weight", "body": "Not flimsy, not stiff. Drapes nicely. Going to buy a second.", "date": "2026-04-10", "verified": true },
+      { "author": "L. N.", "rating": 4, "title": "size up", "body": "Runs a touch slim through the chest. M felt like an S to me.", "date": "2026-04-05", "verified": true }
+    ]
   },
   {
     "id": "cargo-pants-01",
@@ -42,7 +55,14 @@
     "category": "pants",
     "description": "Heavy ripstop cargo. Hidden drawcord waist. Double-knee reinforcement. Deep thigh pockets.",
     "fabric": "Ripstop cotton blend",
-    "sizes": ["S", "M", "L", "XL"]
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 11,
+    "releasedAt": "2026-02-20",
+    "reviews": [
+      { "author": "K. S.", "rating": 5, "title": "the only pants I wear now", "body": "Pockets are real pockets. Knee patches make a difference.", "date": "2026-03-12", "verified": true },
+      { "author": "D. F.", "rating": 5, "title": "built to last", "body": "Two months in and zero wear. The ripstop is the real deal.", "date": "2026-03-09", "verified": true },
+      { "author": "T. A.", "rating": 4, "title": "long but fixable", "body": "Length runs long but the bottom hem hides a hidden cinch.", "date": "2026-02-28" }
+    ]
   },
   {
     "id": "ski-mask-01",
@@ -58,7 +78,12 @@
     "description": "Fine-gauge merino balaclava. 3-hole cut. Goes under a hood or stands alone.",
     "fabric": "Merino wool",
     "sizes": ["One size"],
-    "soldOut": true
+    "soldOut": true,
+    "stock": 0,
+    "releasedAt": "2026-01-10",
+    "reviews": [
+      { "author": "R. E.", "rating": 5, "title": "warm and not itchy", "body": "Most merino balaclavas itch. This one doesn't.", "date": "2026-02-01", "verified": true }
+    ]
   },
   {
     "id": "drop-shorts-01",
@@ -73,7 +98,12 @@
     "category": "shorts",
     "description": "Mid-weight fleece shorts. Elastic waist, woven drawcord. Side split for walk.",
     "fabric": "Brushed fleece",
-    "sizes": ["S", "M", "L", "XL"]
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 23,
+    "releasedAt": "2026-04-12",
+    "reviews": [
+      { "author": "N. B.", "rating": 4, "title": "comfortable", "body": "Soft inside, holds shape. The split panel actually helps with mobility.", "date": "2026-04-15", "verified": true }
+    ]
   },
   {
     "id": "signature-piece-01",
@@ -90,6 +120,12 @@
     "fabric": "Canvas, hand-dyed",
     "sizes": ["M", "L", "XL"],
     "signature": true,
-    "caption": "limited drop \u00b7 01"
+    "caption": "limited drop \u00b7 01",
+    "stock": 6,
+    "releasedAt": "2026-03-01",
+    "reviews": [
+      { "author": "F. A.", "rating": 5, "title": "art you wear", "body": "Got #14. The dye lines are different from the photo and I love that.", "date": "2026-03-25", "verified": true },
+      { "author": "J. O.", "rating": 5, "title": "investment piece", "body": "Heavy, structured, completely unique. Worth every pound.", "date": "2026-03-18", "verified": true }
+    ]
   }
 ]

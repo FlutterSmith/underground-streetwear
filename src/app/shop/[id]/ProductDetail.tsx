@@ -2,18 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { PageTheme } from "@/components/PageTheme";
 import { Footer } from "@/components/Footer";
+import { Reviews } from "@/components/Reviews";
+import { Stars } from "@/components/Stars";
+import { WishlistHeart } from "@/components/WishlistHeart";
+import { RecentlyViewedStrip } from "@/components/RecentlyViewedStrip";
 import type { Product } from "@/lib/products";
-import { products } from "@/lib/products";
+import { products, averageRating } from "@/lib/products";
 import { useCart } from "@/lib/cart";
-
-function formatPrice(n: number): string {
-  return n.toLocaleString("en-US");
-}
+import { useCurrency } from "@/lib/currency";
+import { recordView } from "@/lib/recentlyViewed";
 
 export function ProductDetail({ product }: { product: Product }) {
   const gallery = useMemo(() => {
@@ -31,6 +33,15 @@ export function ProductDetail({ product }: { product: Product }) {
   const [waitlistState, setWaitlistState] = useState<"idle" | "busy" | "ok" | "err">("idle");
   const reduced = useReducedMotion();
   const { add } = useCart();
+  const { format } = useCurrency();
+
+  const rating = averageRating(product);
+  const reviewCount = product.reviews?.length ?? 0;
+  const lowStock = !product.soldOut && typeof product.stock === "number" && product.stock > 0 && product.stock <= 5;
+
+  useEffect(() => {
+    recordView(product.id);
+  }, [product.id]);
 
   const related = products.filter((p) => p.id !== product.id).slice(0, 4);
 
@@ -133,12 +144,25 @@ export function ProductDetail({ product }: { product: Product }) {
               <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-white/60 mb-2">
                 &mdash; {product.category} &mdash;
               </p>
-              <h1 className="text-4xl sm:text-5xl font-medium tracking-tight">
-                {product.name}
-              </h1>
+              <div className="flex items-start justify-between gap-4">
+                <h1 className="text-4xl sm:text-5xl font-medium tracking-tight">
+                  {product.name}
+                </h1>
+                <WishlistHeart productId={product.id} invert size="md" />
+              </div>
               <p className="font-mono text-sm tracking-[0.2em] mt-3 text-white/80">
-                LE {formatPrice(product.priceEGP)} EGP
+                {format(product.priceEGP)}
               </p>
+              {reviewCount > 0 && (
+                <div className="mt-2">
+                  <Stars value={rating} invert showValue count={reviewCount} />
+                </div>
+              )}
+              {lowStock && (
+                <p className="mt-3 font-mono text-[11px] tracking-[0.25em] uppercase text-red-400">
+                  Only {product.stock} left
+                </p>
+              )}
             </div>
 
             {product.description && (
@@ -315,7 +339,7 @@ export function ProductDetail({ product }: { product: Product }) {
                       {p.name}
                     </p>
                     <p className="font-mono text-[10px] tracking-[0.15em] text-white/60 mt-1">
-                      LE {formatPrice(p.priceEGP)}
+                      {format(p.priceEGP)}
                     </p>
                   </div>
                 </Link>
@@ -323,6 +347,19 @@ export function ProductDetail({ product }: { product: Product }) {
             </div>
           </section>
         )}
+
+        {product.reviews && product.reviews.length > 0 && (
+          <section className="mt-32 max-w-3xl mx-auto">
+            <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/50 text-center mb-10">
+              &mdash; reviews &mdash;
+            </p>
+            <Reviews reviews={product.reviews} invert />
+          </section>
+        )}
+
+        <div className="mt-32">
+          <RecentlyViewedStrip excludeId={product.id} invert />
+        </div>
       </main>
       <Footer invert />
     </div>

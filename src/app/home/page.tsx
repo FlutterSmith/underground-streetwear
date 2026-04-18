@@ -8,8 +8,10 @@ import { Nav } from "@/components/Nav";
 import { Newsletter } from "@/components/Newsletter";
 import { BarButton } from "@/components/BarButton";
 import { Footer } from "@/components/Footer";
+import { RecentlyViewedStrip } from "@/components/RecentlyViewedStrip";
 import { siteConfig } from "@/config/site.config";
 import { products } from "@/lib/products";
+import { useCurrency } from "@/lib/currency";
 
 const HERO_IMAGE =
   "https://images.unsplash.com/photo-1579725854926-dbeab39780bc?w=1600&q=80&auto=format&fit=crop";
@@ -18,6 +20,7 @@ export default function HomePage() {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
+  const { format } = useCurrency();
   const [parallaxEnabled, setParallaxEnabled] = useState(false);
 
   useEffect(() => {
@@ -107,12 +110,16 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center justify-between font-mono text-xs tracking-[0.2em] uppercase">
                   <span>{p.name}</span>
-                  <span className="text-black/60">LE {p.priceEGP.toLocaleString("en-US")}</span>
+                  <span className="text-black/60">{format(p.priceEGP)}</span>
                 </div>
               </Link>
             ))}
           </div>
         </section>
+
+        <div className="mt-32">
+          <RecentlyViewedStrip />
+        </div>
 
         <div className="mt-32 border-t border-black/15">
           <Newsletter />

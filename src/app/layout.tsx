@@ -4,6 +4,8 @@ import { Cursor } from "@/components/Cursor";
 import { PageTransition } from "@/components/PageTransition";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CartProvider } from "@/lib/cart";
+import { WishlistProvider } from "@/lib/wishlist";
+import { CurrencyProvider } from "@/lib/currency";
 import { siteConfig } from "@/config/site.config";
 import "./globals.css";
 
@@ -28,11 +30,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
       <body>
-        <CartProvider>
-          <Cursor />
-          <PageTransition>{children}</PageTransition>
-          <CartDrawer />
-        </CartProvider>
+        <CurrencyProvider>
+          <WishlistProvider>
+            <CartProvider>
+              <Cursor />
+              <PageTransition>{children}</PageTransition>
+              <CartDrawer />
+            </CartProvider>
+          </WishlistProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

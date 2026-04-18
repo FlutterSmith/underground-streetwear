@@ -8,6 +8,9 @@ import { Footer } from "@/components/Footer";
 import { BarButton } from "@/components/BarButton";
 import { FormField } from "@/components/FormField";
 import { useCart } from "@/lib/cart";
+import { useCurrency } from "@/lib/currency";
+
+const ADDRESS_KEY = "underground.shipping.v1";
 
 type Errors = Partial<
   Record<
@@ -22,10 +25,6 @@ type Errors = Partial<
     string
   >
 >;
-
-function formatPrice(n: number): string {
-  return n.toLocaleString("en-US");
-}
 
 function generateOrderNumber(): string {
   const rand = Math.floor(Math.random() * 9000 + 1000);
@@ -57,11 +56,13 @@ function validate(values: {
 
 export default function CheckoutPage() {
   const { items, subtotal, clear } = useCart();
+  const { format } = useCurrency();
   const [shipMethod, setShipMethod] = useState<"standard" | "express">("standard");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<{ orderNumber: string; email: string } | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [mounted, setMounted] = useState(false);
+  const [savedAvailable, setSavedAvailable] = useState(false);
   const [form, setForm] = useState({
     email: "",
     firstName: "",
@@ -76,7 +77,25 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setMounted(true);
+    try {
+      const raw = window.localStorage.getItem(ADDRESS_KEY);
+      if (raw) setSavedAvailable(true);
+    } catch {
+      // ignore
+    }
   }, []);
+
+  function autofill() {
+    try {
+      const raw = window.localStorage.getItem(ADDRESS_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      setForm((prev) => ({ ...prev, ...saved }));
+      setSavedAvailable(false);
+    } catch {
+      // ignore
+    }
+  }
 
   function update<K extends keyof typeof form>(key: K, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -95,6 +114,13 @@ export default function CheckoutPage() {
     // Fawry) here, then redirect to the hosted payment page. On success webhook,
     // mark the order paid in your database and clear the cart.
     await new Promise((r) => setTimeout(r, 800));
+    try {
+      const { email: _e, ...address } = form;
+      void _e;
+      window.localStorage.setItem(ADDRESS_KEY, JSON.stringify(address));
+    } catch {
+      // ignore
+    }
     const orderNumber = generateOrderNumber();
     setDone({ orderNumber, email: form.email });
     clear();
@@ -160,9 +186,33 @@ export default function CheckoutPage() {
     <>
       <Nav />
       <main className="max-w-6xl mx-auto px-6 sm:px-10 pb-24">
-        <p className="font-mono text-xs tracking-[0.3em] uppercase text-black/60 mt-6 mb-10 text-center">
+        <p className="font-mono text-xs tracking-[0.3em] uppercase text-black/60 mt-6 mb-6 text-center">
           &mdash; checkout &mdash;
         </p>
+
+        {savedAvailable && (
+          <div className="mb-8 border border-black/15 bg-black/[0.03] p-4 flex items-center justify-between gap-4 flex-wrap">
+            <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-black/70">
+              We saved your last shipping address.
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={autofill}
+                className="font-mono text-[11px] tracking-[0.25em] uppercase underline decoration-1 underline-offset-4 hover:opacity-60"
+              >
+                Use it
+              </button>
+              <button
+                type="button"
+                onClick={() => setSavedAvailable(false)}
+                className="font-mono text-[11px] tracking-[0.25em] uppercase text-black/50 hover:text-black"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_24rem] gap-12">
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-10">
@@ -284,7 +334,7 @@ export default function CheckoutPage() {
                     >
                       <div className="flex items-center justify-between font-mono text-xs tracking-[0.2em] uppercase">
                         <span>{opt.label}</span>
-                        <span>{free ? "FREE" : `LE ${opt.fee}`}</span>
+                        <span>{free ? "FREE" : format(opt.fee)}</span>
                       </div>
                       <p className="text-black/60 text-xs mt-2">{opt.time}</p>
                     </button>
@@ -315,7 +365,7 @@ export default function CheckoutPage() {
               disabled={busy}
               className="h-14 border border-black font-mono text-sm tracking-[0.3em] uppercase hover:bg-black hover:text-white transition-colors disabled:opacity-40"
             >
-              {busy ? "Placing order..." : `Place order — LE ${formatPrice(total)}`}
+              {busy ? "Placing order..." : `Place order — ${format(total)}`}
             </button>
 
             <Link
@@ -342,7 +392,7 @@ export default function CheckoutPage() {
                         {it.name}
                       </p>
                       <p className="font-mono text-[11px] whitespace-nowrap">
-                        LE {formatPrice(it.priceEGP * it.qty)}
+                        {format(it.priceEGP * it.qty)}
                       </p>
                     </div>
                     <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-black/50">
@@ -355,15 +405,15 @@ export default function CheckoutPage() {
             <div className="flex flex-col gap-2 font-mono text-xs pt-2 border-t border-black/10">
               <div className="flex items-center justify-between">
                 <span>Subtotal</span>
-                <span>LE {formatPrice(subtotal)}</span>
+                <span>{format(subtotal)}</span>
               </div>
               <div className="flex items-center justify-between text-black/60">
                 <span>Shipping</span>
-                <span>{shipFee === 0 ? "FREE" : `LE ${shipFee}`}</span>
+                <span>{shipFee === 0 ? "FREE" : format(shipFee)}</span>
               </div>
               <div className="flex items-center justify-between pt-2 mt-1 border-t border-black/10 text-sm">
                 <span>Total</span>
-                <span>LE {formatPrice(total)}</span>
+                <span>{format(total)}</span>
               </div>
             </div>
           </aside>

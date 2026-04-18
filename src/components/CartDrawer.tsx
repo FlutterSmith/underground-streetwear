@@ -5,14 +5,16 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect } from "react";
 import { useCart } from "@/lib/cart";
+import { useCurrency } from "@/lib/currency";
 
-function formatPrice(n: number): string {
-  return n.toLocaleString("en-US");
-}
+const FREE_SHIP_THRESHOLD = 3000;
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, remove, setQty, subtotal, count } = useCart();
+  const { format } = useCurrency();
   const reduced = useReducedMotion();
+  const remaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
+  const progress = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -56,18 +58,35 @@ export function CartDrawer() {
             transition={{ duration: reduced ? 0.15 : 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-[var(--color-bg-light)] text-black flex flex-col border-l border-black"
           >
-            <header className="flex items-center justify-between px-6 py-5 border-b border-black">
-              <p className="font-mono text-xs tracking-[0.3em] uppercase">
-                Cart &mdash; {count}
-              </p>
-              <button
-                type="button"
-                onClick={closeCart}
-                className="font-mono text-xs tracking-[0.3em] uppercase hover:opacity-60 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
-                aria-label="Close cart"
-              >
-                Close
-              </button>
+            <header className="flex flex-col gap-4 px-6 py-5 border-b border-black">
+              <div className="flex items-center justify-between">
+                <p className="font-mono text-xs tracking-[0.3em] uppercase">
+                  Cart &mdash; {count}
+                </p>
+                <button
+                  type="button"
+                  onClick={closeCart}
+                  className="font-mono text-xs tracking-[0.3em] uppercase hover:opacity-60 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
+                  aria-label="Close cart"
+                >
+                  Close
+                </button>
+              </div>
+              {items.length > 0 && (
+                <div className="flex flex-col gap-1.5">
+                  <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-black/60">
+                    {remaining > 0
+                      ? `Add ${format(remaining)} for free shipping`
+                      : "Free shipping unlocked"}
+                  </p>
+                  <div className="h-1 bg-black/10 relative overflow-hidden">
+                    <div
+                      className="absolute inset-y-0 left-0 bg-black transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
             </header>
 
             <div className="flex-1 overflow-y-auto">
@@ -111,7 +130,7 @@ export function CartDrawer() {
                             </p>
                           </div>
                           <p className="font-mono text-xs whitespace-nowrap">
-                            LE {formatPrice(it.priceEGP * it.qty)}
+                            {format(it.priceEGP * it.qty)}
                           </p>
                         </div>
                         <div className="flex items-center justify-between mt-auto">
@@ -155,18 +174,27 @@ export function CartDrawer() {
               <footer className="border-t border-black px-6 py-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between font-mono text-xs tracking-[0.2em] uppercase">
                   <span>Subtotal</span>
-                  <span>LE {formatPrice(subtotal)} EGP</span>
+                  <span>{format(subtotal)}</span>
                 </div>
                 <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-black/50">
                   Shipping + taxes calculated at checkout
                 </p>
-                <Link
-                  href="/cart"
-                  onClick={closeCart}
-                  className="block w-full text-center font-mono text-xs tracking-[0.3em] uppercase py-3 bg-black text-white hover:bg-black/85 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
-                >
-                  View cart
-                </Link>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href="/cart"
+                    onClick={closeCart}
+                    className="block w-full text-center font-mono text-xs tracking-[0.3em] uppercase py-3 border border-black hover:bg-black hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
+                  >
+                    Cart
+                  </Link>
+                  <Link
+                    href="/checkout"
+                    onClick={closeCart}
+                    className="block w-full text-center font-mono text-xs tracking-[0.3em] uppercase py-3 bg-black text-white hover:bg-black/85 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
+                  >
+                    Checkout
+                  </Link>
+                </div>
               </footer>
             )}
           </motion.aside>
