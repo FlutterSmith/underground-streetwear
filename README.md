@@ -13,6 +13,10 @@
 </p>
 
 <p>
+  <img src="https://komarev.com/ghpvc/?username=fluttersmith-underground-streetwear&label=REPO%20VIEWS&color=0a0a0a&style=for-the-badge&base=1000" alt="Repo views"/>
+</p>
+
+<p>
   <img src="https://img.shields.io/badge/27-SKUs-0a0a0a?style=flat-square"/>
   <img src="https://img.shields.io/badge/15-Routes-0a0a0a?style=flat-square"/>
   <img src="https://img.shields.io/badge/0-Backend-0a0a0a?style=flat-square"/>
