@@ -30,6 +30,7 @@ function validate(values: {
 export default function PreOrderPage() {
   const [submitted, setSubmitted] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({
     name: "",
@@ -42,6 +43,12 @@ export default function PreOrderPage() {
 
   function update<K extends keyof typeof form>(key: K, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => {
+      if (!(key in prev)) return prev;
+      const next = { ...prev };
+      delete next[key as keyof Errors];
+      return next;
+    });
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -49,11 +56,18 @@ export default function PreOrderPage() {
     const v = validate(form);
     setErrors(v);
     if (Object.keys(v).length > 0) return;
+    setSubmitError(null);
     setBusy(true);
-    // TODO(template-buyer): POST to your backend / Formspree / Resend endpoint here.
-    await new Promise((r) => setTimeout(r, 600));
-    setBusy(false);
-    setSubmitted(true);
+    try {
+      // TODO(template-buyer): POST to your backend / Formspree / Resend endpoint here.
+      await new Promise((r) => setTimeout(r, 600));
+      setSubmitted(true);
+    } catch (err) {
+      console.error("[pre-order] submission failed", err);
+      setSubmitError("Something went wrong reserving your piece. Please try again.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   if (submitted) {
@@ -155,13 +169,13 @@ export default function PreOrderPage() {
             <span className="font-mono text-[11px] tracking-[0.3em] uppercase text-black/70">
               Size
             </span>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-6 gap-2">
               {SIZES.map((s) => (
                 <button
                   type="button"
                   key={s}
                   onClick={() => update("size", s)}
-                  className={`w-12 h-12 border font-mono text-xs tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current ${
+                  className={`h-12 border font-mono text-xs tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current ${
                     form.size === s
                       ? "bg-black text-white border-black"
                       : "border-black/40 hover:border-black"
@@ -187,6 +201,16 @@ export default function PreOrderPage() {
             onChange={(e) => update("notes", e.target.value)}
             placeholder="Anything we should know"
           />
+
+          {submitError && (
+            <p
+              role="alert"
+              aria-live="polite"
+              className="font-mono text-[11px] tracking-[0.2em] uppercase text-red-700"
+            >
+              {submitError}
+            </p>
+          )}
 
           <button
             type="submit"

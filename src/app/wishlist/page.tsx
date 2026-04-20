@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { BarButton } from "@/components/BarButton";
@@ -14,6 +15,17 @@ export default function WishlistPage() {
   const { ids, remove, clear } = useWishlist();
   const { format } = useCurrency();
   const { add } = useCart();
+  const [justAddedId, setJustAddedId] = useState<string | null>(null);
+  const [sizeById, setSizeById] = useState<Record<string, string>>({});
+
+  function handleAdd(p: (typeof products)[number], size: string) {
+    if (justAddedId === p.id) return;
+    add(p, size, 1);
+    setJustAddedId(p.id);
+    setTimeout(() => {
+      setJustAddedId((curr) => (curr === p.id ? null : curr));
+    }, 1400);
+  }
 
   const items = ids
     .map((id) => products.find((p) => p.id === id))
@@ -59,13 +71,18 @@ export default function WishlistPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {items.map((p) => {
-            const defaultSize = p.sizes?.[0] ?? "M";
+            const sizes = p.sizes && p.sizes.length > 0 ? p.sizes : ["S", "M", "L", "XL"];
+            const selectedSize = sizeById[p.id] ?? sizes[0];
             return (
               <div key={p.id} className="flex flex-col gap-3">
-                <Link href={`/shop/${p.id}`} className="relative aspect-square bg-white block overflow-hidden">
+                <Link
+                  href={`/shop/${p.id}`}
+                  aria-label={`View ${p.name}`}
+                  className="relative aspect-square bg-white block overflow-hidden"
+                >
                   <Image
                     src={p.image}
-                    alt={p.name}
+                    alt=""
                     fill
                     sizes="(max-width: 640px) 90vw, 33vw"
                     className={`object-cover transition-transform duration-500 hover:scale-105 ${
@@ -94,13 +111,34 @@ export default function WishlistPage() {
                   </button>
                 </div>
                 {!p.soldOut && (
-                  <button
-                    type="button"
-                    onClick={() => add(p, defaultSize, 1)}
-                    className="h-10 border border-black font-mono text-[11px] tracking-[0.3em] uppercase hover:bg-black hover:text-white transition-colors"
-                  >
-                    Add to cart ({defaultSize})
-                  </button>
+                  <div className="flex items-stretch gap-2">
+                    <label className="sr-only" htmlFor={`wishlist-size-${p.id}`}>
+                      Size for {p.name}
+                    </label>
+                    <select
+                      id={`wishlist-size-${p.id}`}
+                      value={selectedSize}
+                      onChange={(e) =>
+                        setSizeById((prev) => ({ ...prev, [p.id]: e.target.value }))
+                      }
+                      className="h-10 border border-black bg-transparent font-mono text-[11px] tracking-[0.25em] uppercase px-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-black"
+                    >
+                      {sizes.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => handleAdd(p, selectedSize)}
+                      disabled={justAddedId === p.id}
+                      aria-live="polite"
+                      className="flex-1 h-10 border border-black font-mono text-[11px] tracking-[0.3em] uppercase hover:bg-black hover:text-white transition-colors disabled:bg-black disabled:text-white disabled:cursor-default"
+                    >
+                      {justAddedId === p.id ? "\u2713 Added" : "Add to cart"}
+                    </button>
+                  </div>
                 )}
               </div>
             );

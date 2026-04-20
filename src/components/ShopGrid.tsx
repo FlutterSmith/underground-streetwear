@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import { ProductTile } from "@/components/ProductTile";
 import { RecentlyViewedStrip } from "@/components/RecentlyViewedStrip";
 import type { Product, ProductCategory } from "@/lib/products";
@@ -32,51 +33,73 @@ function avg(p: Product): number {
 }
 
 function ts(p: Product): number {
-  return p.releasedAt ? new Date(p.releasedAt).getTime() : 0;
+  if (!p.releasedAt) return 0;
+  const t = new Date(p.releasedAt).getTime();
+  return Number.isNaN(t) ? 0 : t;
 }
 
 export function ShopGrid({
   regular,
-  signature,
+  signatures,
 }: {
   regular: Product[];
-  signature?: Product;
+  signatures: Product[];
 }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [sort, setSort] = useState<Sort>("featured");
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
   const [hideSoldOut, setHideSoldOut] = useState(false);
+  const reduced = useReducedMotion() ?? false;
+
+  useEffect(() => {
+    if (filter === "all") return;
+    if (!regular.some((p) => p.category === filter)) setFilter("all");
+  }, [filter, regular]);
+
+  const hasSoldOut = useMemo(() => regular.some((p) => p.soldOut), [regular]);
+
+  useEffect(() => {
+    if (hideSoldOut && !hasSoldOut) setHideSoldOut(false);
+  }, [hideSoldOut, hasSoldOut]);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let list = regular.filter((p) => {
+    const tokens = deferredQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const filterLabel = (cat: string) => FILTERS.find((f) => f.key === cat)?.label ?? cat;
+    const list = regular.filter((p) => {
       const matchFilter = filter === "all" || p.category === filter;
-      const matchQuery =
-        q.length === 0 ||
-        p.name.toLowerCase().includes(q) ||
-        (p.description ?? "").toLowerCase().includes(q);
+      const haystack = `${p.name} ${p.description ?? ""} ${p.category} ${filterLabel(p.category)} ${(p.sizes ?? []).join(" ")}`.toLowerCase();
+      const matchQuery = tokens.length === 0 || tokens.every((t) => haystack.includes(t));
       const matchStock = !hideSoldOut || !p.soldOut;
       return matchFilter && matchQuery && matchStock;
     });
-    list = [...list].sort((a, b) => {
+    const tsCache = sort === "newest" ? new Map(list.map((p) => [p.id, ts(p)])) : null;
+    const avgCache = sort === "rating" ? new Map(list.map((p) => [p.id, avg(p)])) : null;
+    list.sort((a, b) => {
       switch (sort) {
         case "newest":
-          return ts(b) - ts(a);
+          return (tsCache!.get(b.id) ?? 0) - (tsCache!.get(a.id) ?? 0);
         case "price-asc":
           return a.priceEGP - b.priceEGP;
         case "price-desc":
           return b.priceEGP - a.priceEGP;
         case "rating":
-          return avg(b) - avg(a);
-        default:
-          return 0;
+          return (avgCache!.get(b.id) ?? 0) - (avgCache!.get(a.id) ?? 0);
+        default: {
+          const sigDiff = Number(!!b.signature) - Number(!!a.signature);
+          if (sigDiff !== 0) return sigDiff;
+          return Number(!!a.soldOut) - Number(!!b.soldOut);
+        }
       }
     });
     return list;
-  }, [regular, filter, query, sort, hideSoldOut]);
+  }, [regular, filter, deferredQuery, sort, hideSoldOut]);
 
-  const showSignature =
-    signature && (filter === "all" || filter === "other") && query.trim().length === 0;
+  const showSignature = useMemo(
+    () =>
+      signatures.length > 0 && (filter === "all" || filter === "other") && query.trim().length === 0,
+    [signatures, filter, query],
+  );
 
   const activeChips: { key: string; label: string; onClear: () => void }[] = [];
   if (filter !== "all") {
@@ -140,19 +163,31 @@ export function ShopGrid({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search the drop"
               aria-label="Search products"
-              className="w-full bg-transparent border-b border-white/30 focus:border-white outline-none py-2 font-mono text-sm text-white placeholder:text-white/40 transition-colors"
+              className="w-full bg-transparent border-b border-white/30 focus:border-white outline-none py-2 pr-7 font-mono text-sm text-white placeholder:text-white/40 transition-colors [&::-webkit-search-cancel-button]:hidden"
             />
+            {query.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-white/50 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-current text-sm"
+              >
+                &times;
+              </button>
+            )}
           </div>
 
-          <label className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-white/70 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={hideSoldOut}
-              onChange={(e) => setHideSoldOut(e.target.checked)}
-              className="accent-white"
-            />
-            In stock only
-          </label>
+          {hasSoldOut && (
+            <label className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-white/70 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hideSoldOut}
+                onChange={(e) => setHideSoldOut(e.target.checked)}
+                className="accent-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              />
+              In stock only
+            </label>
+          )}
 
           <div className="flex items-center gap-3 ml-auto">
             <label className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/60">
@@ -161,7 +196,7 @@ export function ShopGrid({
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as Sort)}
-              className="bg-transparent border border-white/30 text-white font-mono text-[11px] tracking-[0.15em] uppercase py-2 px-3 focus:outline-none focus:border-white"
+              className="bg-transparent border border-white/30 text-white font-mono text-[11px] tracking-[0.15em] uppercase py-2 px-3 focus:outline-none focus:border-white focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               {SORTS.map((s) => (
                 <option key={s.key} value={s.key} className="text-black">
@@ -200,7 +235,11 @@ export function ShopGrid({
           </div>
         )}
 
-        <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-white/50">
+        <p
+          role="status"
+          aria-live="polite"
+          className="font-mono text-[10px] tracking-[0.25em] uppercase text-white/50"
+        >
           {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}
         </p>
       </div>
@@ -219,19 +258,23 @@ export function ShopGrid({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-8 max-w-6xl mx-auto">
             {filtered.map((p, i) => (
               <div key={p.id} className="flex justify-center">
-                <ProductTile product={p} index={i} />
+                <ProductTile product={p} index={i} reduced={reduced} />
               </div>
             ))}
           </div>
 
-          {showSignature && signature && (
-            <div className="mt-32 flex flex-col items-center gap-5">
-              <ProductTile product={signature} index={filtered.length} />
-              {signature.caption && (
-                <p className="font-mono text-[11px] tracking-[0.35em] uppercase text-white/50">
-                  &ldquo;{signature.caption}&rdquo;
-                </p>
-              )}
+          {showSignature && (
+            <div className="mt-32 flex flex-col items-center gap-16">
+              {signatures.map((sig, i) => (
+                <div key={sig.id} className="flex flex-col items-center gap-5">
+                  <ProductTile product={sig} index={filtered.length + i} reduced={reduced} />
+                  {sig.caption && (
+                    <p className="font-mono text-[11px] tracking-[0.35em] uppercase text-white/50">
+                      &ldquo;{sig.caption}&rdquo;
+                    </p>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </>

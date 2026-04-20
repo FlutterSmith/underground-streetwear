@@ -8,18 +8,26 @@ type NewsletterProps = { invert?: boolean };
 export function Newsletter({ invert = false }: NewsletterProps) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "busy" | "ok" | "err">("idle");
+  const [errorMsg, setErrorMsg] = useState("Invalid email");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setErrorMsg("Invalid email");
       setState("err");
       return;
     }
     setState("busy");
-    // TODO(template-buyer): POST to your mailing-list endpoint (Mailchimp, Resend, ConvertKit).
-    await new Promise((r) => setTimeout(r, 500));
-    setState("ok");
-    setEmail("");
+    try {
+      // TODO(template-buyer): POST to your mailing-list endpoint (Mailchimp, Resend, ConvertKit).
+      await new Promise((r) => setTimeout(r, 500));
+      setState("ok");
+      setEmail("");
+    } catch (err) {
+      console.error("[newsletter] subscribe failed", err);
+      setErrorMsg("Couldn't subscribe. Please try again.");
+      setState("err");
+    }
   }
 
   const border = invert ? "border-white/40" : "border-black/40";
@@ -41,9 +49,21 @@ export function Newsletter({ invert = false }: NewsletterProps) {
         </p>
 
         {state === "ok" ? (
-          <p className="font-mono text-sm tracking-[0.2em] uppercase mt-2">
-            &mdash; you&apos;re in. &mdash;
-          </p>
+          <div className="flex flex-col items-center gap-3 mt-2">
+            <p className="font-mono text-sm tracking-[0.2em] uppercase">
+              &mdash; you&apos;re in. &mdash;
+            </p>
+            <button
+              type="button"
+              onClick={() => setState("idle")}
+              className={clsx(
+                "font-mono text-[10px] tracking-[0.3em] uppercase underline-offset-4 hover:underline",
+                invert ? "text-white/60 hover:text-white" : "text-black/60 hover:text-black",
+              )}
+            >
+              Subscribe another
+            </button>
+          </div>
         ) : (
           <form
             onSubmit={handleSubmit}
@@ -59,6 +79,8 @@ export function Newsletter({ invert = false }: NewsletterProps) {
               placeholder="you@domain.com"
               autoComplete="email"
               aria-label="Email address"
+              aria-invalid={state === "err"}
+              aria-describedby={state === "err" ? "newsletter-error" : undefined}
               className={clsx(
                 "flex-1 bg-transparent outline-none py-3 font-mono text-sm tracking-wide",
                 text,
@@ -78,8 +100,13 @@ export function Newsletter({ invert = false }: NewsletterProps) {
           </form>
         )}
         {state === "err" && (
-          <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-red-700">
-            Invalid email
+          <p
+            id="newsletter-error"
+            role="alert"
+            aria-live="polite"
+            className="font-mono text-[10px] tracking-[0.25em] uppercase text-red-700"
+          >
+            {errorMsg}
           </p>
         )}
       </div>

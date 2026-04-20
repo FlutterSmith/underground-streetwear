@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site.config";
 import { useCart } from "@/lib/cart";
@@ -21,11 +21,13 @@ const CURRENCIES: Currency[] = ["EGP", "USD", "EUR"];
 type NavProps = { invert?: boolean };
 
 export function Nav({ invert = false }: NavProps) {
-  const { count, openCart } = useCart();
-  const { count: wishCount } = useWishlist();
+  const { count, hydrated: cartHydrated, openCart } = useCart();
+  const { count: wishCount, hydrated: wishHydrated } = useWishlist();
   const { currency, setCurrency } = useCurrency();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setOpen(false);
@@ -34,9 +36,20 @@ export function Nav({ invert = false }: NavProps) {
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
+    const toggleBtn = toggleRef.current;
     document.body.style.overflow = "hidden";
+    const first = menuRef.current?.querySelector<HTMLElement>(
+      'a, button, [tabindex]:not([tabindex="-1"])'
+    );
+    first?.focus();
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+      toggleBtn?.focus();
     };
   }, [open]);
 
@@ -58,11 +71,22 @@ export function Nav({ invert = false }: NavProps) {
         </Link>
 
         <nav className="hidden md:flex justify-self-center items-center gap-5 sm:gap-8">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="hover:opacity-70 transition-opacity">
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            const active = pathname === l.href;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={clsx(
+                  "hover:opacity-70 transition-opacity",
+                  active && "underline underline-offset-4 font-semibold",
+                )}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden md:flex justify-self-end items-center gap-5">
@@ -93,14 +117,14 @@ export function Nav({ invert = false }: NavProps) {
                 badgeBg,
               )}
             >
-              {wishCount}
+              {wishHydrated ? wishCount : "\u00A0"}
             </span>
           </Link>
           <button
             type="button"
             onClick={openCart}
             className="relative inline-flex items-center gap-2 hover:opacity-70 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
-            aria-label={`Open cart (${count} items)`}
+            aria-label={cartHydrated ? `Open cart (${count} items)` : "Open cart"}
           >
             <span>Cart</span>
             <span
@@ -109,15 +133,17 @@ export function Nav({ invert = false }: NavProps) {
                 badgeBg,
               )}
             >
-              {count}
+              {cartHydrated ? count : "\u00A0"}
             </span>
           </button>
         </div>
 
         <button
+          ref={toggleRef}
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
+          aria-controls="mobile-nav-menu"
           aria-label="Toggle menu"
           className="md:hidden justify-self-end inline-flex items-center justify-center w-10 h-10 -mr-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
         >
@@ -140,6 +166,11 @@ export function Nav({ invert = false }: NavProps) {
 
       {open && (
         <div
+          id="mobile-nav-menu"
+          ref={menuRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Main menu"
           className={clsx(
             "md:hidden fixed inset-x-0 top-[4.5rem] z-40 border-t",
             surface,
@@ -148,22 +179,30 @@ export function Nav({ invert = false }: NavProps) {
           )}
         >
           <nav className="flex flex-col px-6 py-4">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={clsx("py-3 font-mono text-sm tracking-[0.25em] uppercase border-b", border)}
-              >
-                {l.label}
-              </Link>
-            ))}
+            {links.map((l) => {
+              const active = pathname === l.href;
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={active ? "page" : undefined}
+                  className={clsx(
+                    "py-3 font-mono text-sm tracking-[0.25em] uppercase border-b transition-opacity active:opacity-60",
+                    border,
+                    active && "underline underline-offset-4 font-semibold",
+                  )}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
             <Link
               href="/wishlist"
-              className={clsx("py-3 font-mono text-sm tracking-[0.25em] uppercase border-b flex items-center justify-between", border)}
+              className={clsx("py-3 font-mono text-sm tracking-[0.25em] uppercase border-b flex items-center justify-between transition-opacity active:opacity-60", border)}
             >
               <span>Wishlist</span>
               <span className={clsx("inline-flex items-center justify-center min-w-[1.5rem] h-5 px-1 text-[10px] rounded-full", badgeBg)}>
-                {wishCount}
+                {wishHydrated ? wishCount : "\u00A0"}
               </span>
             </Link>
             <button
@@ -172,11 +211,11 @@ export function Nav({ invert = false }: NavProps) {
                 setOpen(false);
                 openCart();
               }}
-              className={clsx("py-3 font-mono text-sm tracking-[0.25em] uppercase border-b flex items-center justify-between text-left", border)}
+              className={clsx("py-3 font-mono text-sm tracking-[0.25em] uppercase border-b flex items-center justify-between text-left transition-opacity active:opacity-60", border)}
             >
               <span>Cart</span>
               <span className={clsx("inline-flex items-center justify-center min-w-[1.5rem] h-5 px-1 text-[10px] rounded-full", badgeBg)}>
-                {count}
+                {cartHydrated ? count : "\u00A0"}
               </span>
             </button>
             <div className="py-4 flex items-center gap-3">

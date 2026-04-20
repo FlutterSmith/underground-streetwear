@@ -22,6 +22,44 @@
     ]
   },
   {
+    "id": "zip-hoodie-01",
+    "name": "ZIP HOODIE",
+    "priceEGP": 2800,
+    "image": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "hoodie",
+    "description": "Full-zip brushed fleece. Heavyweight YKK pull. Storm-flap chin guard.",
+    "fabric": "Brushed fleece, 380gsm",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 9,
+    "releasedAt": "2026-03-20",
+    "reviews": [
+      { "author": "P. Z.", "rating": 5, "title": "chef's kiss", "body": "Zipper pull is satisfying. Fleece interior is like a blanket.", "date": "2026-04-07", "verified": true }
+    ]
+  },
+  {
+    "id": "washed-hoodie-01",
+    "name": "WASHED HOODIE",
+    "priceEGP": 2600,
+    "image": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "hoodie",
+    "description": "Sun-faded, pigment-washed jersey. Inside-out seams. Uneven hem by design.",
+    "fabric": "Cotton, pigment wash",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 3,
+    "releasedAt": "2026-04-01",
+    "reviews": [
+      { "author": "I. D.", "rating": 5, "title": "every one different", "body": "Mine came with a slightly darker left sleeve. I love that.", "date": "2026-04-14", "verified": true }
+    ]
+  },
+  {
     "id": "crew-tee-01",
     "name": "TEE",
     "priceEGP": 900,
@@ -40,6 +78,63 @@
     "reviews": [
       { "author": "M. H.", "rating": 5, "title": "perfect weight", "body": "Not flimsy, not stiff. Drapes nicely. Going to buy a second.", "date": "2026-04-10", "verified": true },
       { "author": "L. N.", "rating": 4, "title": "size up", "body": "Runs a touch slim through the chest. M felt like an S to me.", "date": "2026-04-05", "verified": true }
+    ]
+  },
+  {
+    "id": "long-sleeve-01",
+    "name": "LONG SLEEVE",
+    "priceEGP": 1100,
+    "image": "https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "tee",
+    "description": "Long-sleeve henley. Horn buttons, tubular hem. Waffle texture.",
+    "fabric": "Waffle cotton",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 14,
+    "releasedAt": "2026-02-28",
+    "reviews": [
+      { "author": "B. R.", "rating": 4, "title": "nice texture", "body": "Waffle weave is substantial. Fits boxy.", "date": "2026-03-10", "verified": true }
+    ]
+  },
+  {
+    "id": "boxy-tee-01",
+    "name": "BOXY TEE",
+    "priceEGP": 950,
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "tee",
+    "description": "Cropped boxy cut. 260gsm heavyweight jersey. No chest logo.",
+    "fabric": "Heavy cotton jersey",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 22,
+    "releasedAt": "2026-04-08",
+    "reviews": [
+      { "author": "E. T.", "rating": 5, "title": "fits exactly right", "body": "Crop is subtle, not gimmicky. Holds shape after wash.", "date": "2026-04-16", "verified": true }
+    ]
+  },
+  {
+    "id": "graphic-tee-01",
+    "name": "GRAPHIC TEE",
+    "priceEGP": 1050,
+    "image": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "tee",
+    "description": "Large-print back graphic, discharge ink. Feels like nothing's there.",
+    "fabric": "Ringspun cotton",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 2,
+    "releasedAt": "2026-04-10",
+    "reviews": [
+      { "author": "O. P.", "rating": 5, "title": "prints don't crack", "body": "Discharge print — no plastisol stiffness. After 8 washes still pristine.", "date": "2026-04-18", "verified": true }
     ]
   },
   {
@@ -65,6 +160,64 @@
     ]
   },
   {
+    "id": "wide-leg-01",
+    "name": "WIDE LEG",
+    "priceEGP": 1950,
+    "image": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1594938291221-94f18cbb5660?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "pants",
+    "description": "High-rise wide leg. Pleated front. Heavy twill weave with structure.",
+    "fabric": "Cotton twill",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 7,
+    "releasedAt": "2026-03-18",
+    "reviews": [
+      { "author": "Z. Q.", "rating": 5, "title": "drapes beautifully", "body": "Real trousers, not joggers pretending. Front pleat stays sharp.", "date": "2026-04-03", "verified": true }
+    ]
+  },
+  {
+    "id": "denim-01",
+    "name": "DENIM",
+    "priceEGP": 2200,
+    "image": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1542272604-787c3835535d?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1604176354204-9268737828e4?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "pants",
+    "description": "14oz selvedge denim. Raw indigo. Will fade to you over time.",
+    "fabric": "Japanese selvedge denim",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 15,
+    "releasedAt": "2026-01-25",
+    "reviews": [
+      { "author": "U. V.", "rating": 5, "title": "patina starting", "body": "Six weeks of wear, zero washes. Fade map is forming on the thigh.", "date": "2026-03-05", "verified": true },
+      { "author": "H. W.", "rating": 5, "title": "real selvedge", "body": "You can see the selvedge line on the cuff. Build quality is there.", "date": "2026-02-19", "verified": true }
+    ]
+  },
+  {
+    "id": "sweatpant-01",
+    "name": "SWEATPANT",
+    "priceEGP": 1500,
+    "image": "https://images.unsplash.com/photo-1552902019-ebcd97aa9aa0?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1552902019-ebcd97aa9aa0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "pants",
+    "description": "Heavy fleece sweatpant. Tapered leg. Ribbed cuff.",
+    "fabric": "Cotton fleece",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 20,
+    "releasedAt": "2026-03-05",
+    "reviews": [
+      { "author": "C. G.", "rating": 4, "title": "cozy as hell", "body": "Interior fleece is soft. Taper is not too aggressive.", "date": "2026-03-22", "verified": true }
+    ]
+  },
+  {
     "id": "ski-mask-01",
     "name": "MASK",
     "priceEGP": 500,
@@ -86,6 +239,21 @@
     ]
   },
   {
+    "id": "neck-gaiter-01",
+    "name": "NECK GAITER",
+    "priceEGP": 400,
+    "image": "https://images.unsplash.com/photo-1544737151105-9bbc43717a15?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1544737151105-9bbc43717a15?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "mask",
+    "description": "Tubular merino gaiter. Pull it up, pull it down.",
+    "fabric": "Merino wool",
+    "sizes": ["One size"],
+    "stock": 12,
+    "releasedAt": "2026-02-15"
+  },
+  {
     "id": "drop-shorts-01",
     "name": "SHORTS",
     "priceEGP": 1200,
@@ -104,6 +272,151 @@
     "reviews": [
       { "author": "N. B.", "rating": 4, "title": "comfortable", "body": "Soft inside, holds shape. The split panel actually helps with mobility.", "date": "2026-04-15", "verified": true }
     ]
+  },
+  {
+    "id": "canvas-shorts-01",
+    "name": "CANVAS SHORTS",
+    "priceEGP": 1350,
+    "image": "https://images.unsplash.com/photo-1591647122572-27f611a06be5?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1591647122572-27f611a06be5?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "shorts",
+    "description": "Mid-weight canvas. Pleated front. Leather pull tab.",
+    "fabric": "Heavy canvas",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 6,
+    "releasedAt": "2026-04-03"
+  },
+  {
+    "id": "overcoat-01",
+    "name": "OVERCOAT",
+    "priceEGP": 5800,
+    "image": "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Unstructured wool overcoat. Raw-edge lapel. Bone-shell buttons.",
+    "fabric": "Virgin wool",
+    "sizes": ["M", "L", "XL"],
+    "stock": 4,
+    "releasedAt": "2026-02-10",
+    "reviews": [
+      { "author": "V. X.", "rating": 5, "title": "the coat", "body": "Drapes like it's been tailored for me. Weight is perfect for spring.", "date": "2026-03-14", "verified": true }
+    ]
+  },
+  {
+    "id": "bomber-01",
+    "name": "BOMBER",
+    "priceEGP": 3400,
+    "image": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Coated nylon bomber. Knit collar and cuffs. Interior utility pocket.",
+    "fabric": "Coated nylon",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 8,
+    "releasedAt": "2026-03-01"
+  },
+  {
+    "id": "chore-jacket-01",
+    "name": "CHORE JACKET",
+    "priceEGP": 2900,
+    "image": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "French chore-coat cut. Triple patch pockets. Overdyed moleskin.",
+    "fabric": "Moleskin, overdyed",
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 13,
+    "releasedAt": "2026-02-25",
+    "reviews": [
+      { "author": "Q. L.", "rating": 5, "title": "workwear done right", "body": "Pockets are deep, fabric is stiff in a good way. Will break in beautifully.", "date": "2026-03-30", "verified": true }
+    ]
+  },
+  {
+    "id": "beanie-01",
+    "name": "BEANIE",
+    "priceEGP": 350,
+    "image": "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Rib-knit merino beanie. Folded cuff. Woven label.",
+    "fabric": "Merino wool",
+    "sizes": ["One size"],
+    "stock": 30,
+    "releasedAt": "2026-01-20"
+  },
+  {
+    "id": "cap-01",
+    "name": "CAP",
+    "priceEGP": 600,
+    "image": "https://images.unsplash.com/photo-1534215754734-18e55d13e346?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1534215754734-18e55d13e346?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Washed canvas 6-panel. Unstructured crown. Brass clasp.",
+    "fabric": "Washed canvas",
+    "sizes": ["One size"],
+    "stock": 18,
+    "releasedAt": "2026-03-08"
+  },
+  {
+    "id": "tote-01",
+    "name": "TOTE",
+    "priceEGP": 750,
+    "image": "https://images.unsplash.com/photo-1544816155-12df9643f363?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1544816155-12df9643f363?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "16oz canvas tote. Reinforced straps. Interior slip pocket.",
+    "fabric": "Heavy canvas",
+    "sizes": ["One size"],
+    "stock": 25,
+    "releasedAt": "2026-03-12",
+    "reviews": [
+      { "author": "J. I.", "rating": 4, "title": "daily driver", "body": "Holds my laptop + groceries. Straps don't dig in.", "date": "2026-04-01", "verified": true }
+    ]
+  },
+  {
+    "id": "scarf-01",
+    "name": "SCARF",
+    "priceEGP": 900,
+    "image": "https://images.unsplash.com/photo-1601370552761-d129028bd833?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1601370552761-d129028bd833?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Oversized lambswool scarf. Fringed edges. Solid dye.",
+    "fabric": "Lambswool",
+    "sizes": ["One size"],
+    "stock": 10,
+    "releasedAt": "2026-02-05"
+  },
+  {
+    "id": "socks-01",
+    "name": "SOCKS",
+    "priceEGP": 200,
+    "image": "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Tube socks, terry-loop interior. Pack of two.",
+    "fabric": "Cotton blend",
+    "sizes": ["One size"],
+    "stock": 48,
+    "releasedAt": "2026-04-05"
   },
   {
     "id": "signature-piece-01",
@@ -127,5 +440,40 @@
       { "author": "F. A.", "rating": 5, "title": "art you wear", "body": "Got #14. The dye lines are different from the photo and I love that.", "date": "2026-03-25", "verified": true },
       { "author": "J. O.", "rating": 5, "title": "investment piece", "body": "Heavy, structured, completely unique. Worth every pound.", "date": "2026-03-18", "verified": true }
     ]
+  },
+  {
+    "id": "signature-coat-01",
+    "name": "CEREMONY COAT",
+    "priceEGP": 7800,
+    "image": "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1578681994506-b8f463449011?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Floor-length ceremonial coat. Run of 25. Hand-stitched back seam with contrast thread.",
+    "fabric": "Boiled wool",
+    "sizes": ["M", "L"],
+    "signature": true,
+    "caption": "limited drop \u00b7 02",
+    "stock": 2,
+    "releasedAt": "2026-04-01"
+  },
+  {
+    "id": "signature-vest-01",
+    "name": "RAW VEST",
+    "priceEGP": 3600,
+    "image": "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=1200&q=80&auto=format&fit=crop",
+    "gallery": [
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=1200&q=80&auto=format&fit=crop"
+    ],
+    "category": "other",
+    "description": "Patchwork utility vest. Each one assembled from deadstock. Numbered of 30.",
+    "fabric": "Deadstock canvas + wool",
+    "sizes": ["S", "M", "L"],
+    "signature": true,
+    "caption": "limited drop \u00b7 03",
+    "stock": 5,
+    "releasedAt": "2026-03-22"
   }
 ]

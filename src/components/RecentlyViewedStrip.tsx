@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo } from "react";
 import clsx from "clsx";
 import { useRecentlyViewed } from "@/lib/recentlyViewed";
 import { products } from "@/lib/products";
@@ -16,11 +17,16 @@ export function RecentlyViewedStrip({ excludeId, invert = false }: Props) {
   const ids = useRecentlyViewed();
   const { format } = useCurrency();
 
-  const items = ids
-    .filter((id) => id !== excludeId)
-    .map((id) => products.find((p) => p.id === id))
-    .filter((p): p is (typeof products)[number] => Boolean(p))
-    .slice(0, 6);
+  const items = useMemo(
+    () =>
+      ids
+        .filter((id) => id !== excludeId)
+        .map((id) => products.find((p) => p.id === id))
+        .filter((p): p is (typeof products)[number] => Boolean(p))
+        .filter((p) => !p.soldOut)
+        .slice(0, 6),
+    [ids, excludeId],
+  );
 
   if (items.length === 0) return null;
 

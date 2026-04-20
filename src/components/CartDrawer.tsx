@@ -3,11 +3,30 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { useCurrency } from "@/lib/currency";
+import { findProduct } from "@/lib/products";
 
 const FREE_SHIP_THRESHOLD = 3000;
+const FALLBACK_IMAGE = "/fallback-garment.svg";
+
+function LineItemImage({ src, alt }: { src: string; alt: string }) {
+  const [current, setCurrent] = useState(src);
+  return (
+    <Image
+      src={current}
+      alt={alt}
+      fill
+      sizes="80px"
+      className="object-cover"
+      onError={() => {
+        if (current !== FALLBACK_IMAGE) setCurrent(FALLBACK_IMAGE);
+      }}
+    />
+  );
+}
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, remove, setQty, subtotal, count } = useCart();
@@ -15,6 +34,13 @@ export function CartDrawer() {
   const reduced = useReducedMotion();
   const remaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
   const progress = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
+  const panelRef = useRef<HTMLElement | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (isOpen) closeCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -27,11 +53,48 @@ export function CartDrawer() {
 
   useEffect(() => {
     if (!isOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const focusables = () =>
+      panelRef.current
+        ? Array.from(
+            panelRef.current.querySelectorAll<HTMLElement>(
+              'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            ),
+          ).filter((el) => !el.hasAttribute("aria-hidden"))
+        : [];
+
+    const raf = requestAnimationFrame(() => {
+      focusables()[0]?.focus();
+    });
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeCart();
+      if (e.key === "Escape") {
+        closeCart();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const list = focusables();
+      if (list.length === 0) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (active && panelRef.current && !panelRef.current.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("keydown", onKey);
+      previouslyFocused?.focus?.();
+    };
   }, [isOpen, closeCart]);
 
   return (
@@ -50,8 +113,11 @@ export function CartDrawer() {
           />
           <motion.aside
             key="cart-panel"
+            ref={panelRef as React.RefObject<HTMLElement>}
             role="dialog"
+            aria-modal="true"
             aria-label="Shopping cart"
+            tabIndex={-1}
             initial={reduced ? { opacity: 0 } : { x: "100%" }}
             animate={reduced ? { opacity: 1 } : { x: 0 }}
             exit={reduced ? { opacity: 0 } : { x: "100%" }}
@@ -108,29 +174,27 @@ export function CartDrawer() {
                 </div>
               ) : (
                 <ul className="divide-y divide-black/10">
-                  {items.map((it) => (
+                  {items.map((it) => {
+                    const live = findProduct(it.productId);
+                    const displayName = live?.name ?? it.name;
+                    const displayPrice = live?.priceEGP ?? it.priceEGP;
+                    return (
                     <li key={it.id} className="flex gap-4 p-5">
                       <div className="relative w-20 h-20 shrink-0 bg-white">
-                        <Image
-                          src={it.image}
-                          alt={it.name}
-                          fill
-                          sizes="80px"
-                          className="object-cover"
-                        />
+                        <LineItemImage src={live?.image ?? it.image} alt={displayName} />
                       </div>
                       <div className="flex-1 flex flex-col gap-2">
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <p className="font-mono text-xs tracking-[0.2em] uppercase">
-                              {it.name}
+                              {displayName}
                             </p>
                             <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-black/50 mt-1">
                               Size {it.size}
                             </p>
                           </div>
                           <p className="font-mono text-xs whitespace-nowrap">
-                            {format(it.priceEGP * it.qty)}
+                            {format(displayPrice * it.qty)}
                           </p>
                         </div>
                         <div className="flex items-center justify-between mt-auto">
@@ -138,7 +202,8 @@ export function CartDrawer() {
                             <button
                               type="button"
                               onClick={() => setQty(it.id, it.qty - 1)}
-                              className="w-7 h-7 font-mono text-sm hover:bg-black hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
+                              disabled={it.qty <= 1}
+                              className="w-7 h-7 font-mono text-sm hover:bg-black hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-black"
                               aria-label="Decrease quantity"
                             >
                               &minus;
@@ -165,7 +230,8 @@ export function CartDrawer() {
                         </div>
                       </div>
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               )}
             </div>

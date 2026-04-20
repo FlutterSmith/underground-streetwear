@@ -7,6 +7,7 @@ import { BarButton } from "@/components/BarButton";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/lib/cart";
 import { useCurrency } from "@/lib/currency";
+import { findProduct } from "@/lib/products";
 
 const FREE_SHIP_THRESHOLD = 3000;
 
@@ -70,15 +71,19 @@ export default function CartPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-10">
           <ul className="divide-y divide-black/15">
-            {items.map((it) => (
+            {items.map((it) => {
+              const live = findProduct(it.productId);
+              const displayName = live?.name ?? it.name;
+              const displayPrice = live?.priceEGP ?? it.priceEGP;
+              return (
               <li key={it.id} className="flex gap-5 py-6">
                 <Link
                   href={`/shop/${it.productId}`}
                   className="relative w-28 h-28 shrink-0 bg-white"
                 >
                   <Image
-                    src={it.image}
-                    alt={it.name}
+                    src={live?.image ?? it.image}
+                    alt={displayName}
                     fill
                     sizes="112px"
                     className="object-cover"
@@ -91,14 +96,14 @@ export default function CartPage() {
                         href={`/shop/${it.productId}`}
                         className="font-mono text-sm tracking-[0.2em] uppercase hover:opacity-70 transition-opacity"
                       >
-                        {it.name}
+                        {displayName}
                       </Link>
                       <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-black/50 mt-1">
                         Size {it.size}
                       </p>
                     </div>
                     <p className="font-mono text-sm whitespace-nowrap">
-                      {format(it.priceEGP * it.qty)}
+                      {format(displayPrice * it.qty)}
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-auto">
@@ -106,7 +111,8 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={() => setQty(it.id, it.qty - 1)}
-                        className="w-8 h-8 font-mono text-sm hover:bg-black hover:text-white transition-colors"
+                        disabled={it.qty <= 1}
+                        className="w-8 h-8 font-mono text-sm hover:bg-black hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-black"
                         aria-label="Decrease quantity"
                       >
                         &minus;
@@ -117,7 +123,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={() => setQty(it.id, it.qty + 1)}
-                        className="w-8 h-8 font-mono text-sm hover:bg-black hover:text-white transition-colors"
+                        className="w-8 h-8 font-mono text-sm hover:bg-black hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
                         aria-label="Increase quantity"
                       >
                         +
@@ -126,14 +132,16 @@ export default function CartPage() {
                     <button
                       type="button"
                       onClick={() => remove(it.id)}
-                      className="font-mono text-[11px] tracking-[0.25em] uppercase text-black/50 hover:text-black transition-colors"
+                      aria-label={`Remove ${displayName} from cart`}
+                      className="font-mono text-[11px] tracking-[0.25em] uppercase text-black/50 hover:text-black transition-colors underline underline-offset-4"
                     >
                       Remove
                     </button>
                   </div>
                 </div>
               </li>
-            ))}
+              );
+            })}
           </ul>
 
           <aside className="border border-black p-6 h-fit flex flex-col gap-5 lg:sticky lg:top-6">
@@ -160,7 +168,7 @@ export default function CartPage() {
             <BarButton href="/checkout" label="Checkout" fullWidth />
             <Link
               href="/shop"
-              className="text-center font-mono text-[11px] tracking-[0.25em] uppercase text-black/60 hover:text-black transition-colors"
+              className="text-center font-mono text-[11px] tracking-[0.25em] uppercase text-black/60 hover:text-black transition-colors underline underline-offset-4 decoration-1"
             >
               Keep shopping
             </Link>

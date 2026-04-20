@@ -2,17 +2,21 @@
 
 import { useEffect, useState } from "react";
 
+const BRAND_TZ = "Africa/Cairo";
+
+const formatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: BRAND_TZ,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "numeric",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: true,
+});
+
 function format(d: Date): string {
-  const pad = (n: number) => n.toString().padStart(2, "0");
-  const mm = pad(d.getMonth() + 1);
-  const dd = pad(d.getDate());
-  const yyyy = d.getFullYear();
-  let hours = d.getHours();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12;
-  const min = pad(d.getMinutes());
-  const sec = pad(d.getSeconds());
-  return `${mm}/${dd}/${yyyy}, ${hours}:${min}:${sec} ${ampm}`;
+  return `${formatter.format(d)} CAI`;
 }
 
 export function Timestamp() {

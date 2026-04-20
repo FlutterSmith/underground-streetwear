@@ -11,8 +11,15 @@ function load(): string[] {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
-  } catch {
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((x): x is string => typeof x === "string").slice(0, MAX);
+  } catch (err) {
+    if (err instanceof SyntaxError) {
+      console.warn("[recentlyViewed] stored JSON is corrupted — purging", err);
+      try { window.localStorage.removeItem(STORAGE_KEY); } catch {}
+    } else {
+      console.warn("[recentlyViewed] read failed — localStorage unavailable", err);
+    }
     return [];
   }
 }
@@ -20,8 +27,8 @@ function load(): string[] {
 function save(ids: string[]) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-  } catch {
-    // ignore
+  } catch (err) {
+    console.warn("[recentlyViewed] persistence failed", err);
   }
 }
 
@@ -39,9 +46,14 @@ export function useRecentlyViewed(): string[] {
   useEffect(() => {
     setIds(load());
     const onChange = () => setIds(load());
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) setIds(load());
+    };
     window.addEventListener("underground:recently-viewed-changed", onChange);
+    window.addEventListener("storage", onStorage);
     return () => {
       window.removeEventListener("underground:recently-viewed-changed", onChange);
+      window.removeEventListener("storage", onStorage);
     };
   }, []);
 

@@ -11,9 +11,11 @@ type BarButtonProps = {
   onClick?: () => void;
   className?: string;
   fullWidth?: boolean;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 };
 
-export function BarButton({ label, href, onClick, className, fullWidth }: BarButtonProps) {
+export function BarButton({ label, href, onClick, className, fullWidth, disabled, type = "button" }: BarButtonProps) {
   const reduced = useReducedMotion();
 
   const fillTransition = reduced
@@ -57,7 +59,14 @@ export function BarButton({ label, href, onClick, className, fullWidth }: BarBut
     return (
       <Link
         href={href}
-        className={clsx("focus:outline-none focus-visible:ring-2 focus-visible:ring-current", fullWidth && "w-full block")}
+        aria-disabled={disabled || undefined}
+        tabIndex={disabled ? -1 : undefined}
+        onClick={disabled ? (e) => e.preventDefault() : undefined}
+        className={clsx(
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-current",
+          fullWidth && "w-full block",
+          disabled && "opacity-50 cursor-not-allowed pointer-events-none",
+        )}
       >
         {inner}
       </Link>
@@ -66,9 +75,14 @@ export function BarButton({ label, href, onClick, className, fullWidth }: BarBut
 
   return (
     <button
-      type="button"
+      type={type}
       onClick={onClick}
-      className={clsx("focus:outline-none focus-visible:ring-2 focus-visible:ring-current", fullWidth && "w-full")}
+      disabled={disabled}
+      className={clsx(
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-current",
+        fullWidth && "w-full",
+        disabled && "opacity-50 cursor-not-allowed",
+      )}
     >
       {inner}
     </button>

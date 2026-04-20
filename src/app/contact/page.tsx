@@ -28,11 +28,18 @@ function validate(values: {
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({ name: "", email: "", topic: "", message: "" });
 
   function update<K extends keyof typeof form>(key: K, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => {
+      if (!(key in prev)) return prev;
+      const next = { ...prev };
+      delete next[key as keyof Errors];
+      return next;
+    });
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -40,11 +47,18 @@ export default function ContactPage() {
     const v = validate(form);
     setErrors(v);
     if (Object.keys(v).length > 0) return;
+    setSubmitError(null);
     setBusy(true);
-    // TODO(template-buyer): POST to your backend / Formspree / Resend endpoint here.
-    await new Promise((r) => setTimeout(r, 600));
-    setBusy(false);
-    setSubmitted(true);
+    try {
+      // TODO(template-buyer): POST to your backend / Formspree / Resend endpoint here.
+      await new Promise((r) => setTimeout(r, 600));
+      setSubmitted(true);
+    } catch (err) {
+      console.error("[contact] submission failed", err);
+      setSubmitError("Something went wrong sending your message. Please try again.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   if (submitted) {
@@ -151,6 +165,16 @@ export default function ContactPage() {
             error={errors.message}
             placeholder="Tell us what you need"
           />
+
+          {submitError && (
+            <p
+              role="alert"
+              aria-live="polite"
+              className="font-mono text-[11px] tracking-[0.2em] uppercase text-red-700"
+            >
+              {submitError}
+            </p>
+          )}
 
           <button
             type="submit"

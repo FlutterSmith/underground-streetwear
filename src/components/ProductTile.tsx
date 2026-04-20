@@ -2,22 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import type { Product } from "@/lib/products";
-import { averageRating } from "@/lib/products";
+import { averageRating, isLowStock } from "@/lib/products";
 import { rotationFor } from "@/lib/seededRotation";
 import { useCart } from "@/lib/cart";
 import { useCurrency } from "@/lib/currency";
 import { WishlistHeart } from "@/components/WishlistHeart";
 import { Stars } from "@/components/Stars";
 
-type ProductTileProps = { product: Product; index?: number };
+type ProductTileProps = { product: Product; index?: number; reduced?: boolean };
 
 const FALLBACK = "/fallback-garment.svg";
 
-export function ProductTile({ product, index = 0 }: ProductTileProps) {
-  const reduced = useReducedMotion();
+export function ProductTile({ product, index = 0, reduced = false }: ProductTileProps) {
   const rotation = rotationFor(product.id);
   const [primarySrc, setPrimarySrc] = useState(product.image);
   const [hovered, setHovered] = useState(false);
@@ -34,7 +33,7 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
   const initial = reduced ? { opacity: 0 } : { opacity: 0, y: 24, rotate: rotation };
   const animate = reduced ? { opacity: 1 } : { opacity: 1, y: 0, rotate: rotation };
 
-  const lowStock = !product.soldOut && typeof product.stock === "number" && product.stock > 0 && product.stock <= 5;
+  const lowStock = isLowStock(product);
 
   function handleQuickAdd(e: React.MouseEvent, size: string) {
     e.preventDefault();
@@ -47,7 +46,7 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
   return (
     <Link
       href={`/shop/${product.id}`}
-      className="focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => {
         setHovered(false);
@@ -95,7 +94,10 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
             className={`object-cover transition-opacity duration-500 ${
               hovered && secondImage ? "opacity-0" : "opacity-100"
             } ${product.soldOut ? "grayscale opacity-50" : ""}`}
-            onError={() => setPrimarySrc(FALLBACK)}
+            onError={() => {
+              setPrimarySrc(FALLBACK);
+              setLoaded(true);
+            }}
             onLoad={() => setLoaded(true)}
             priority={index < 3}
           />
@@ -131,7 +133,7 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
 
           {!product.soldOut && (
             <div
-              className={`absolute inset-x-0 bottom-0 transition-transform duration-300 ease-out ${
+              className={`absolute inset-x-0 bottom-0 transition-transform duration-300 ease-out group-focus-within:translate-y-0 [@media(hover:none)]:translate-y-0 ${
                 hovered ? "translate-y-0" : "translate-y-full"
               }`}
             >
@@ -165,7 +167,11 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
           )}
         </div>
         <figcaption className="flex flex-col items-center gap-1 text-center">
-          <span className="font-mono text-[11px] tracking-[0.25em] [font-variant-caps:all-small-caps] text-white/90">
+          <span
+            className={`font-mono text-[11px] tracking-[0.25em] [font-variant-caps:all-small-caps] ${
+              product.soldOut ? "text-white/40" : "text-white/90"
+            }`}
+          >
             {product.name}
           </span>
           <span className="font-mono text-[11px] tracking-[0.15em] text-white/60">
@@ -175,7 +181,7 @@ export function ProductTile({ product, index = 0 }: ProductTileProps) {
               <>&mdash; {format(product.priceEGP)}</>
             )}
           </span>
-          {reviewCount > 0 && (
+          {rating !== null && (
             <Stars value={rating} invert size="sm" showValue count={reviewCount} />
           )}
         </figcaption>

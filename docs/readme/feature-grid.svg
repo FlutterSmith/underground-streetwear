@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-label="Feature grid">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5f4f0"/>
+      <stop offset="1" stop-color="#ecebe5"/>
+    </linearGradient>
+    <filter id="g2" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0"/>
+      <feComposite in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="640" fill="url(#paper)"/>
+  <rect width="1200" height="640" filter="url(#g2)"/>
+
+  <g font-family="Inter, sans-serif" fill="#0a0a0a">
+    <text x="60" y="70" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="5" opacity="0.55">— WHAT'S INSIDE —</text>
+    <text x="60" y="130" font-size="56" font-weight="500" letter-spacing="-2">A full storefront.</text>
+    <text x="60" y="175" font-size="56" font-weight="500" letter-spacing="-2" opacity="0.4">Not a landing page.</text>
+
+    <g font-family="JetBrains Mono, monospace" font-size="13" letter-spacing="2">
+      <!-- Row 1 -->
+      <g transform="translate(60, 240)">
+        <rect width="260" height="110" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" opacity="0.5">01 / STORE</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1">CART + DRAWER</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" opacity="0.6">PERSISTED · KEYED BY SIZE</text>
+      </g>
+      <g transform="translate(340, 240)">
+        <rect width="260" height="110" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" opacity="0.5">02 / STORE</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1">WISHLIST</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" opacity="0.6">HEARTS EVERYWHERE</text>
+      </g>
+      <g transform="translate(620, 240)">
+        <rect width="260" height="110" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" opacity="0.5">03 / STORE</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1">REVIEWS</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" opacity="0.6">RATING BARS · VERIFIED</text>
+      </g>
+      <g transform="translate(900, 240)">
+        <rect width="240" height="110" fill="#0a0a0a"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" fill="#f5f4f0" opacity="0.6">04 / STORE</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1" fill="#f5f4f0">CURRENCY</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" fill="#f5f4f0" opacity="0.6">EGP · USD · EUR</text>
+      </g>
+
+      <!-- Row 2 -->
+      <g transform="translate(60, 370)">
+        <rect width="260" height="110" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" opacity="0.5">05 / MOTION</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1">BAR-BUTTON</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" opacity="0.6">SIGNATURE FILL · 500MS</text>
+      </g>
+      <g transform="translate(340, 370)">
+        <rect width="260" height="110" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" opacity="0.5">06 / MOTION</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1">SPLIT REVEAL</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" opacity="0.6">WORD-BY-WORD HERO</text>
+      </g>
+      <g transform="translate(620, 370)">
+        <rect width="260" height="110" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" opacity="0.5">07 / MOTION</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1">MAGNETIC</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" opacity="0.6">CURSOR-TRACKING ICONS</text>
+      </g>
+      <g transform="translate(900, 370)">
+        <rect width="240" height="110" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="16" y="32" font-size="11" letter-spacing="4" opacity="0.5">08 / MOTION</text>
+        <text x="16" y="62" font-size="18" letter-spacing="1">FILM GRAIN</text>
+        <text x="16" y="90" font-size="10" letter-spacing="2" opacity="0.6">SVG NOISE OVERLAY</text>
+      </g>
+
+      <!-- Row 3 -->
+      <g transform="translate(60, 500)">
+        <rect width="1080" height="100" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="20" y="32" font-size="11" letter-spacing="4" opacity="0.5">— ALSO —</text>
+        <text x="20" y="62" font-size="14" letter-spacing="2">PARALLAX · MARQUEE · SCROLL-PROGRESS · MANIFESTO · PAGE-TRANSITIONS · CUSTOM CURSOR · REDUCED-MOTION-SAFE</text>
+        <text x="20" y="86" font-size="10" letter-spacing="3" opacity="0.55">ALL MOTION GATED ON PREFERS-REDUCED-MOTION AND (HOVER: HOVER)</text>
+      </g>
+    </g>
+  </g>
+</svg>

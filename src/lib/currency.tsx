@@ -43,19 +43,23 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY) as Currency | null;
       if (saved && saved in RATES) setCurrencyState(saved);
-    } catch {
-      // ignore
+    } catch (err) {
+      console.warn("[currency] read failed — localStorage unavailable", err);
     }
     setHydrated(true);
   }, []);
 
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, currency);
+    } catch (err) {
+      console.warn("[currency] persistence failed", err);
+    }
+  }, [currency, hydrated]);
+
   function setCurrency(c: Currency) {
     setCurrencyState(c);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, c);
-    } catch {
-      // ignore
-    }
   }
 
   const value = useMemo<CurrencyContextValue>(() => {
@@ -66,10 +70,10 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       symbol: SYMBOL[cur],
       format: (egp: number) => {
         const converted = egp * RATES[cur];
-        const rounded = cur === "EGP" ? Math.round(converted) : Math.round(converted * 100) / 100;
-        const formatted = rounded.toLocaleString("en-US", {
-          minimumFractionDigits: cur === "EGP" ? 0 : 2,
-          maximumFractionDigits: cur === "EGP" ? 0 : 2,
+        const fractionDigits = cur === "EGP" ? 0 : 2;
+        const formatted = converted.toLocaleString("en-US", {
+          minimumFractionDigits: fractionDigits,
+          maximumFractionDigits: fractionDigits,
         });
         return `${SYMBOL[cur]} ${formatted}`;
       },

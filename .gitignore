@@ -12,5 +12,11 @@ Thumbs.db
 .turbo/
 coverage/
 .claude/
-.candy-wrapper/
+.candy-wrapper/*
 tsconfig.tsbuildinfo
+
+# Candy Wrapper (auto-added)
+NUL
+Nul
+nul
+!.candy-wrapper/notes/

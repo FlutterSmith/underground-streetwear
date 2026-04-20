@@ -1,0 +1,46 @@
+{
+  "products": {
+    "hoodie": {
+      "primary": "https://images.unsplash.com/photo-1548958070-784df64f9c99?w=1200&q=80&auto=format&fit=crop",
+      "detail1": "https://images.unsplash.com/photo-1579572331145-5e53b299c64e?w=1200&q=80&auto=format&fit=crop",
+      "detail2": "https://images.unsplash.com/photo-1616703055375-b5e495a5c6fe?w=1200&q=80&auto=format&fit=crop"
+    },
+    "tee": {
+      "primary": "https://images.unsplash.com/photo-1570358934903-35c0ff1bd95e?w=1200&q=80&auto=format&fit=crop",
+      "detail1": "https://images.unsplash.com/photo-1499971442178-8c10fdf5f6ac?w=1200&q=80&auto=format&fit=crop",
+      "detail2": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&q=80&auto=format&fit=crop"
+    },
+    "pants": {
+      "primary": "https://images.unsplash.com/photo-1590759483822-b2fee5aa6bd3?w=1200&q=80&auto=format&fit=crop",
+      "detail1": "https://images.unsplash.com/photo-1627398924667-7f4ab354ab49?w=1200&q=80&auto=format&fit=crop",
+      "detail2": "https://images.unsplash.com/photo-1627910016961-ee310ef0b108?w=1200&q=80&auto=format&fit=crop"
+    },
+    "mask": {
+      "primary": "https://images.unsplash.com/photo-1583440194369-ac78b451536a?w=1200&q=80&auto=format&fit=crop",
+      "detail1": "https://images.unsplash.com/photo-1528907460462-5cc6fb2bdba5?w=1200&q=80&auto=format&fit=crop",
+      "detail2": "https://images.unsplash.com/photo-1510933844587-60d4a40d74dd?w=1200&q=80&auto=format&fit=crop"
+    },
+    "shorts": {
+      "primary": "https://images.unsplash.com/photo-1715532098304-1e81e1f42600?w=1200&q=80&auto=format&fit=crop",
+      "detail1": "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=1200&q=80&auto=format&fit=crop",
+      "detail2": "https://images.unsplash.com/photo-1591741543032-bf439b4fd46c?w=1200&q=80&auto=format&fit=crop"
+    },
+    "signature": {
+      "primary": "https://images.unsplash.com/photo-1617113930975-f9c7243ae527?w=1200&q=80&auto=format&fit=crop",
+      "detail1": "https://images.unsplash.com/photo-1585790619870-846207d5a58a?w=1200&q=80&auto=format&fit=crop",
+      "detail2": "https://images.unsplash.com/photo-1761896902115-49793a359daf?w=1200&q=80&auto=format&fit=crop"
+    }
+  },
+  "lookbook": [
+    "https://images.unsplash.com/photo-1754476241031-3a7c7675f95b?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1754473618488-27a2cefd90b4?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1754473582678-0c03ec66a23c?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1754473397061-e18dc1091855?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1754473355381-e3eb43d098b4?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1647610229306-3906b8f72539?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1620259570543-31964aa22586?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1706293336470-79d2d6c1c3e7?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1690643712421-725f99ef7a85?w=1200&q=80&auto=format&fit=crop"
+  ],
+  "home_hero": "https://images.unsplash.com/photo-1579725854926-dbeab39780bc?w=1200&q=80&auto=format&fit=crop"
+}

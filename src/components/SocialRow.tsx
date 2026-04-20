@@ -1,5 +1,6 @@
 import { siteConfig, type SocialIcon } from "@/config/site.config";
 import clsx from "clsx";
+import { Magnetic } from "@/components/Magnetic";
 
 const icons: Record<SocialIcon, React.ReactNode> = {
   fb: (
@@ -24,29 +25,36 @@ const icons: Record<SocialIcon, React.ReactNode> = {
 type SocialRowProps = { invert?: boolean; className?: string };
 
 export function SocialRow({ invert = false, className }: SocialRowProps) {
-  const fill = invert ? "#FFFFFF" : "#000000";
   return (
-    <ul className={clsx("flex items-center gap-6", className)}>
+    <ul
+      className={clsx(
+        "flex items-center gap-6",
+        invert ? "text-white" : "text-black",
+        className,
+      )}
+    >
       {siteConfig.socials.map((s) => (
         <li key={s.label}>
-          <a
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={s.label}
-            className="inline-flex items-center justify-center transition-transform duration-200 ease-out hover:scale-[1.15] focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill={fill}
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden
+          <Magnetic strength={0.5} radius={80}>
+            <a
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={s.label}
+              className="inline-flex items-center justify-center transition-all duration-200 ease-out hover:scale-[1.15] hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
             >
-              {icons[s.icon]}
-            </svg>
-          </a>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                {icons[s.icon]}
+              </svg>
+            </a>
+          </Magnetic>
         </li>
       ))}
     </ul>

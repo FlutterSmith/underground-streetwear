@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { PageTheme } from "@/components/PageTheme";
@@ -12,7 +12,7 @@ import { Stars } from "@/components/Stars";
 import { WishlistHeart } from "@/components/WishlistHeart";
 import { RecentlyViewedStrip } from "@/components/RecentlyViewedStrip";
 import type { Product } from "@/lib/products";
-import { products, averageRating } from "@/lib/products";
+import { products, averageRating, isLowStock } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { useCurrency } from "@/lib/currency";
 import { recordView } from "@/lib/recentlyViewed";
@@ -22,28 +22,38 @@ export function ProductDetail({ product }: { product: Product }) {
     const g = product.gallery && product.gallery.length > 0 ? product.gallery : [product.image];
     return Array.from(new Set(g));
   }, [product]);
-  const sizes = product.sizes ?? ["S", "M", "L", "XL"];
+  const sizes = product.sizes && product.sizes.length > 0 ? product.sizes : ["S", "M", "L", "XL"];
 
   const [activeIdx, setActiveIdx] = useState(0);
+  const safeIdx = Math.min(activeIdx, gallery.length - 1);
   const [size, setSize] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
   const [showSizeError, setShowSizeError] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistState, setWaitlistState] = useState<"idle" | "busy" | "ok" | "err">("idle");
+  const waitlistInputRef = useRef<HTMLInputElement>(null);
   const reduced = useReducedMotion();
   const { add } = useCart();
   const { format } = useCurrency();
 
   const rating = averageRating(product);
   const reviewCount = product.reviews?.length ?? 0;
-  const lowStock = !product.soldOut && typeof product.stock === "number" && product.stock > 0 && product.stock <= 5;
+  const lowStock = isLowStock(product);
 
   useEffect(() => {
     recordView(product.id);
+    setShowSizeError(false);
+    setSize(null);
+    setQty(1);
+    setActiveIdx(0);
+    setJustAdded(false);
   }, [product.id]);
 
-  const related = products.filter((p) => p.id !== product.id).slice(0, 4);
+  const related = useMemo(
+    () => products.filter((p) => p.id !== product.id).slice(0, 4),
+    [product.id],
+  );
 
   function handleAdd() {
     if (!size) {
@@ -59,6 +69,8 @@ export function ProductDetail({ product }: { product: Product }) {
     e.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waitlistEmail)) {
       setWaitlistState("err");
+      waitlistInputRef.current?.focus();
+      waitlistInputRef.current?.select();
       return;
     }
     setWaitlistState("busy");
@@ -86,7 +98,7 @@ export function ProductDetail({ product }: { product: Product }) {
             <div className="relative aspect-square bg-white/5 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={gallery[activeIdx]}
+                  key={gallery[safeIdx]}
                   initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
@@ -94,12 +106,12 @@ export function ProductDetail({ product }: { product: Product }) {
                   className="absolute inset-0"
                 >
                   <Image
-                    src={gallery[activeIdx]}
-                    alt={`${product.name} view ${activeIdx + 1}`}
+                    src={gallery[safeIdx]}
+                    alt={`${product.name} view ${safeIdx + 1}`}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover"
-                    priority={activeIdx === 0}
+                    priority={safeIdx === 0}
                   />
                 </motion.div>
               </AnimatePresence>
@@ -115,16 +127,38 @@ export function ProductDetail({ product }: { product: Product }) {
               )}
             </div>
             {gallery.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
+              <div
+                role="tablist"
+                aria-label="Product images"
+                className="grid grid-cols-4 gap-2"
+              >
                 {gallery.map((src, i) => (
                   <button
                     key={src + i}
                     type="button"
+                    role="tab"
+                    aria-selected={i === safeIdx}
+                    tabIndex={i === safeIdx ? 0 : -1}
                     onClick={() => setActiveIdx(i)}
-                    className={`relative aspect-square bg-white/5 border transition-colors ${
-                      i === activeIdx ? "border-white" : "border-transparent hover:border-white/40"
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowRight" || e.key === "ArrowLeft" || e.key === "Home" || e.key === "End") {
+                        e.preventDefault();
+                        const next =
+                          e.key === "ArrowRight" ? (i + 1) % gallery.length
+                          : e.key === "ArrowLeft" ? (i - 1 + gallery.length) % gallery.length
+                          : e.key === "Home" ? 0
+                          : gallery.length - 1;
+                        setActiveIdx(next);
+                        const parent = e.currentTarget.parentElement;
+                        const btn = parent?.querySelectorAll<HTMLButtonElement>('button[role="tab"]')[next];
+                        btn?.focus();
+                        btn?.scrollIntoView({ block: "nearest", inline: "nearest" });
+                      }
+                    }}
+                    className={`relative aspect-square bg-white/5 border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                      i === safeIdx ? "border-white" : "border-transparent hover:border-white/40"
                     }`}
-                    aria-label={`View image ${i + 1}`}
+                    aria-label={`View image ${i + 1} of ${gallery.length}`}
                   >
                     <Image
                       src={src}
@@ -153,7 +187,7 @@ export function ProductDetail({ product }: { product: Product }) {
               <p className="font-mono text-sm tracking-[0.2em] mt-3 text-white/80">
                 {format(product.priceEGP)}
               </p>
-              {reviewCount > 0 && (
+              {rating !== null && (
                 <div className="mt-2">
                   <Stars value={rating} invert showValue count={reviewCount} />
                 </div>
@@ -196,6 +230,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 ) : (
                   <form onSubmit={handleWaitlist} className="flex items-stretch border-b border-white/40">
                     <input
+                      ref={waitlistInputRef}
                       type="email"
                       value={waitlistEmail}
                       onChange={(e) => {
@@ -204,6 +239,8 @@ export function ProductDetail({ product }: { product: Product }) {
                       }}
                       placeholder="you@domain.com"
                       aria-label="Waitlist email"
+                      aria-invalid={waitlistState === "err"}
+                      aria-describedby={waitlistState === "err" ? "waitlist-error" : undefined}
                       className="flex-1 bg-transparent outline-none py-3 font-mono text-sm text-white placeholder:text-white/30"
                     />
                     <button
@@ -216,7 +253,12 @@ export function ProductDetail({ product }: { product: Product }) {
                   </form>
                 )}
                 {waitlistState === "err" && (
-                  <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-red-400">
+                  <p
+                    id="waitlist-error"
+                    role="alert"
+                    aria-live="polite"
+                    className="font-mono text-[10px] tracking-[0.25em] uppercase text-red-400"
+                  >
                     Invalid email
                   </p>
                 )}
@@ -228,12 +270,31 @@ export function ProductDetail({ product }: { product: Product }) {
                 <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-white/70">
                   Size
                 </p>
-                <Link
-                  href="#"
-                  className="font-mono text-[10px] tracking-[0.25em] uppercase text-white/40 hover:text-white/80 transition-colors"
-                >
-                  Size guide
-                </Link>
+                <details className="relative font-mono text-[10px] tracking-[0.25em] uppercase text-white/40 [&[open]>summary]:text-white/80">
+                  <summary className="cursor-pointer hover:text-white/80 transition-colors list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                    Size guide
+                  </summary>
+                  <div className="absolute right-0 mt-2 w-72 bg-black border border-white/20 p-4 z-10">
+                    <p className="text-white/70 mb-3 tracking-[0.2em]">Chest / length (cm)</p>
+                    <table className="w-full text-white/80 tabular-nums">
+                      <thead>
+                        <tr className="text-white/50">
+                          <th className="text-left py-1">Size</th>
+                          <th className="text-right py-1">Chest</th>
+                          <th className="text-right py-1">Length</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td className="py-0.5">XS</td><td className="text-right">94</td><td className="text-right">66</td></tr>
+                        <tr><td className="py-0.5">S</td><td className="text-right">100</td><td className="text-right">68</td></tr>
+                        <tr><td className="py-0.5">M</td><td className="text-right">106</td><td className="text-right">70</td></tr>
+                        <tr><td className="py-0.5">L</td><td className="text-right">112</td><td className="text-right">72</td></tr>
+                        <tr><td className="py-0.5">XL</td><td className="text-right">118</td><td className="text-right">74</td></tr>
+                        <tr><td className="py-0.5">XXL</td><td className="text-right">124</td><td className="text-right">76</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </details>
               </div>
               <div className="flex flex-wrap gap-2">
                 {sizes.map((s) => (
@@ -295,10 +356,23 @@ export function ProductDetail({ product }: { product: Product }) {
             >
               <span className="absolute inset-0 bg-white transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] origin-left scale-x-0 hover:scale-x-100" />
               <span
-                className={`relative z-10 transition-colors duration-300 ${
+                className={`relative z-10 inline-flex items-center justify-center gap-2 transition-colors duration-300 ${
                   justAdded ? "text-white" : "text-white hover:text-black"
                 }`}
               >
+                {justAdded && (
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="square"
+                  >
+                    <path d="M3 8.5 L7 12 L13 4" />
+                  </svg>
+                )}
                 {justAdded ? "Added to cart" : "Add to cart"}
               </span>
             </button>
@@ -318,7 +392,7 @@ export function ProductDetail({ product }: { product: Product }) {
             <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/50 text-center mb-10">
               &mdash; more pieces &mdash;
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
               {related.map((p) => (
                 <Link
                   key={p.id}

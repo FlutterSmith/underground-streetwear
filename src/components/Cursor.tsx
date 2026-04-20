@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function Cursor() {
   const dotRef = useRef<HTMLDivElement>(null);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(hover: hover)");
     if (!mq.matches) return;
+    setEnabled(true);
 
     document.documentElement.classList.add("has-custom-cursor");
 
@@ -47,6 +49,8 @@ export function Cursor() {
       document.documentElement.classList.remove("has-custom-cursor");
     };
   }, []);
+
+  if (!enabled) return null;
 
   return (
     <div

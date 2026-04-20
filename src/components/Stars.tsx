@@ -17,9 +17,17 @@ export function Stars({ value, size = "sm", invert = false, showValue, count }: 
     return { i, fill };
   });
 
+  const countSuffix =
+    typeof count === "number" ? `, ${count} review${count === 1 ? "" : "s"}` : "";
+  const accessibleLabel = `Rated ${value.toFixed(1)} out of 5${countSuffix}`;
+
   return (
-    <span className={clsx("inline-flex items-center gap-1", invert ? "text-white/70" : "text-black/70")}>
-      <span className="inline-flex items-center" aria-label={`${value.toFixed(1)} out of 5`}>
+    <span
+      role="img"
+      aria-label={accessibleLabel}
+      className={clsx("inline-flex items-center gap-1", invert ? "text-white/70" : "text-black/70")}
+    >
+      <span className="inline-flex items-center" aria-hidden>
         {stars.map(({ i, fill }) => (
           <svg
             key={i}
@@ -43,7 +51,7 @@ export function Stars({ value, size = "sm", invert = false, showValue, count }: 
         ))}
       </span>
       {showValue && (
-        <span className="font-mono text-[10px] tracking-[0.15em]">
+        <span className="font-mono text-[10px] tracking-[0.15em]" aria-hidden>
           {value.toFixed(1)}
           {typeof count === "number" && (
             <span className={clsx(invert ? "text-white/40" : "text-black/40")}>

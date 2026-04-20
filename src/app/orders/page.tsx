@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { FormField } from "@/components/FormField";
@@ -26,24 +26,37 @@ type Order = {
   itemCount: number;
 };
 
-function mockLookup(orderNumber: string, email: string): Order | null {
+type LookupResult =
+  | { kind: "ok"; order: Order }
+  | { kind: "bad-format" }
+  | { kind: "not-found" };
+
+function mockLookup(orderNumber: string, email: string): LookupResult {
   const trimmed = orderNumber.trim();
-  if (!/^UG-\d{2}-\d{4}$/i.test(trimmed)) return null;
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
+  if (!/^UG-\d{4}-[A-Z0-9]+-[A-Z0-9]+$/i.test(trimmed)) return { kind: "bad-format" };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { kind: "bad-format" };
 
   // TODO(template-buyer): replace with real lookup against your orders store.
-  const seed = trimmed.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+  let seed = 2166136261;
+  for (let i = 0; i < trimmed.length; i++) {
+    seed ^= trimmed.charCodeAt(i);
+    seed = Math.imul(seed, 16777619);
+  }
+  seed = Math.abs(seed);
   const stageIdx = seed % STAGES.length;
   const placedDays = (seed % 9) + 1;
   const placed = new Date(Date.now() - placedDays * 24 * 60 * 60 * 1000);
   return {
-    number: trimmed.toUpperCase(),
-    email,
-    placedAt: placed.toISOString().slice(0, 10),
-    status: STAGES[stageIdx].key,
-    carrier: stageIdx >= 2 ? "Aramex" : "Pending",
-    trackingId: stageIdx >= 2 ? `ARX${seed * 9}` : "Pending",
-    itemCount: (seed % 3) + 1,
+    kind: "ok",
+    order: {
+      number: trimmed.toUpperCase(),
+      email,
+      placedAt: placed.toISOString().slice(0, 10),
+      status: STAGES[stageIdx].key,
+      carrier: stageIdx >= 2 ? "Aramex" : "Pending",
+      trackingId: stageIdx >= 2 ? `ARX${seed * 9}` : "Pending",
+      itemCount: (seed % 3) + 1,
+    },
   };
 }
 
@@ -51,22 +64,40 @@ export default function OrdersPage() {
   const [orderNumber, setOrderNumber] = useState("");
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
+  const lookupInFlight = useRef(false);
+  const lookupSeq = useRef(0);
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (lookupInFlight.current) return;
+    lookupInFlight.current = true;
+    const seq = ++lookupSeq.current;
     setError(null);
+    setOrder(null);
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 600));
-    const result = mockLookup(orderNumber, email);
-    setBusy(false);
-    if (!result) {
-      setError("We couldn't find an order matching that number and email.");
-      setOrder(null);
-      return;
+    try {
+      await new Promise((r) => setTimeout(r, 600));
+      if (seq !== lookupSeq.current) return;
+      const result = mockLookup(orderNumber, email);
+      if (result.kind === "bad-format") {
+        setError(
+          "Check the format: order numbers look like UG-2026-XXXX-XXXX and emails need a valid @domain.",
+        );
+        setOrder(null);
+        return;
+      }
+      if (result.kind === "not-found") {
+        setError("We couldn't find an order matching that number and email.");
+        setOrder(null);
+        return;
+      }
+      setOrder(result.order);
+    } finally {
+      if (seq === lookupSeq.current) setBusy(false);
+      lookupInFlight.current = false;
     }
-    setOrder(result);
   }
 
   function reset() {
@@ -99,7 +130,9 @@ export default function OrdersPage() {
               name="orderNumber"
               value={orderNumber}
               onChange={(e) => setOrderNumber(e.target.value)}
-              placeholder="UG-26-1234"
+              placeholder="UG-2026-XXXXXX-XXX"
+              aria-invalid={!!error}
+              aria-describedby={error ? "orders-lookup-error" : undefined}
             />
             <FormField
               label="Email"
@@ -110,9 +143,16 @@ export default function OrdersPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@domain.com"
+              aria-invalid={!!error}
+              aria-describedby={error ? "orders-lookup-error" : undefined}
             />
             {error && (
-              <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-red-700">
+              <p
+                id="orders-lookup-error"
+                role="alert"
+                aria-live="polite"
+                className="font-mono text-[11px] tracking-[0.2em] uppercase text-red-700"
+              >
                 {error}
               </p>
             )}
@@ -129,6 +169,12 @@ export default function OrdersPage() {
                 hello@underground.label
               </a>
             </p>
+            <div className="flex flex-col items-center gap-2 pt-4 border-t border-black/10">
+              <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-black/50">
+                Haven&apos;t ordered yet?
+              </p>
+              <BarButton href="/shop" label="Shop the drop" />
+            </div>
           </form>
         ) : (
           <article className="border border-black/15 p-6 flex flex-col gap-8">

@@ -27,9 +27,17 @@ export function Reviews({ reviews, invert = false }: ReviewsProps) {
 
   if (reviews.length === 0) {
     return (
-      <div className={invert ? "text-white/60" : "text-black/60"}>
+      <section
+        aria-labelledby="reviews-empty-heading"
+        role="status"
+        aria-live="polite"
+        className={invert ? "text-white/60" : "text-black/60"}
+      >
+        <h3 id="reviews-empty-heading" className="sr-only">
+          Reviews
+        </h3>
         <p className="text-sm">No reviews yet. Be the first.</p>
-      </div>
+      </section>
     );
   }
 
@@ -76,6 +84,16 @@ export function Reviews({ reviews, invert = false }: ReviewsProps) {
           })}
         </div>
       </header>
+
+      {visible.length === 0 && filter !== null && (
+        <p
+          role="status"
+          aria-live="polite"
+          className={`text-sm ${muted}`}
+        >
+          No {filter}-star reviews yet.
+        </p>
+      )}
 
       <ul className={`divide-y ${border}`}>
         {visible.map((r, i) => (

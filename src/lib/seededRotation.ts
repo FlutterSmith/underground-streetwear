@@ -16,7 +16,14 @@ function mulberry32(seed: number) {
   };
 }
 
+const cache = new Map<string, number>();
+
 export function rotationFor(id: string, range = 8): number {
+  const key = `${id}:${range}`;
+  const cached = cache.get(key);
+  if (cached !== undefined) return cached;
   const rng = mulberry32(hashString(id));
-  return (rng() * 2 - 1) * range;
+  const value = (rng() * 2 - 1) * range;
+  cache.set(key, value);
+  return value;
 }
