@@ -22,7 +22,7 @@ type TextareaProps = BaseProps &
 type Props = InputProps | TextareaProps;
 
 const fieldClass =
-  "w-full bg-transparent border-b border-black/30 focus:border-black outline-none focus-visible:ring-2 focus-visible:ring-black/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-light)] py-3 font-mono text-sm tracking-wide placeholder:text-black/30 transition-colors";
+  "w-full bg-transparent outline-none py-3 font-mono text-sm tracking-wide placeholder:text-black/30";
 
 export function FormField(props: Props) {
   const { label, name, error } = props;

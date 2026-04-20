@@ -30,7 +30,6 @@ export function Newsletter({ invert = false }: NewsletterProps) {
     }
   }
 
-  const border = invert ? "border-white/40" : "border-black/40";
   const text = invert ? "text-white" : "text-black";
   const placeholder = invert ? "placeholder:text-white/40" : "placeholder:text-black/40";
   const bg = invert ? "bg-white text-black" : "bg-black text-white";
@@ -67,7 +66,7 @@ export function Newsletter({ invert = false }: NewsletterProps) {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className={clsx("w-full max-w-md flex items-stretch border-b", border)}
+            className="w-full max-w-md flex items-stretch"
           >
             <input
               type="email"

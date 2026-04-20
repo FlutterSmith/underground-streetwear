@@ -228,7 +228,7 @@ export function ProductDetail({ product }: { product: Product }) {
                     &mdash; you&apos;re on it. &mdash;
                   </p>
                 ) : (
-                  <form onSubmit={handleWaitlist} className="flex items-stretch border-b border-white/40">
+                  <form onSubmit={handleWaitlist} className="flex items-stretch">
                     <input
                       ref={waitlistInputRef}
                       type="email"
